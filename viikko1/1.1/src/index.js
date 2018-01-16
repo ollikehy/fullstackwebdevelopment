@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 const Otsikko = (props) => {
     return (
         <div>
-            <h1>{props.otsikko}</h1>
+            <h1>{props.kurssi.nimi}</h1>
         </div>
     )
 }
@@ -36,8 +36,9 @@ const Yhteensa = (props) => {
 }
 
 const App = () => {
-    const kurssi = 'Half Stack -sovelluskehitys'
-    const osat = [
+    const kurssi = {
+    nimi: 'Half Stack -sovelluskehitys',
+    osat: [
      {
         nimi: 'Reactin perusteet',
         tehtavia: 10
@@ -51,11 +52,12 @@ const App = () => {
         tehtavia: 14
      }
     ]
+}
     return (
       <div>
-        <Otsikko otsikko={kurssi}/> 
-        <Sisalto osat={osat}/>
-        <Yhteensa osat={osat}/>
+        <Otsikko kurssi={kurssi}/> 
+        <Sisalto osat={kurssi.osat}/>
+        <Yhteensa osat={kurssi.osat}/>
       </div>
     )
   }
