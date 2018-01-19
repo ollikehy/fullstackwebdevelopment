@@ -11,32 +11,62 @@ class App extends React.Component {
         }
     }
 
+    kasvataHyvia = (arvo) => () => {this.setState({hyva : arvo})}
+    kasvataNeutraaleja = (arvo) => () => {this.setState({neutraali : arvo})}
+    kasvataHuonoja = (arvo) => () => {this.setState({huono : arvo})}
+
     render() {
      return (
         <div>
             <h2>Anna palautetta</h2>
-            <button onClick={() => this.setState({ hyva: this.state.hyva + 1})}>
-                hyvä
-            </button>
-            <button onClick={() => this.setState({ neutraali: this.state.neutraali + 1})}>
-                neutraali
-            </button>
-            <button onClick={() => this.setState({ huono: this.state.huono + 1})}>
-                huono
-            </button>
-            <Statistiikka hyva={this.state.hyva} neutraali={this.state.neutraali} huono={this.state.huono} />
+            <Button handleClick={this.kasvataHyvia(this.state.hyva + 1)}
+                    text="Hyvä"/>
+            <Button handleClick={this.kasvataNeutraaleja(this.state.neutraali + 1)}
+                    text="Neutraali"/>
+            <Button handleClick={this.kasvataHuonoja(this.state.huono + 1)}
+                    text="Huono"/>
+            <Statistics hyva={this.state.hyva} neutraali={this.state.neutraali} huono={this.state.huono} />
         </div>
      )}
 }
 
-    const Statistiikka = (props) => {
+    const Button = ({handleClick, text}) => {
+        return (    
+            <button onClick={handleClick}>
+                {text}
+            </button>
+        )
+    }
+
+    const Statistics = ({hyva, neutraali, huono}) => {
+        var yhteensa = hyva + neutraali + huono
+        var keskiarvo =  (hyva - huono) / yhteensa
+        var positiivisia = (hyva / yhteensa) * 100
         return (
             <div>
                 <h3>Statistiikka</h3>
-                <p>Hyvä: {props.hyva}</p>
-                <p>Neutraali: {props.neutraali}</p>
-                <p>Huono: {props.huono}</p>
+                <Statistic teksti='Hyvä' statistiikka={hyva}/>
+                <Statistic teksti='Neutraali' statistiikka={neutraali}/>
+                <Statistic teksti='Huono' statistiikka={huono}/>
+                <Statistic teksti='Keskiarvo' statistiikka={keskiarvo}/>
+                <Statistic teksti='Positiivisia' statistiikka={positiivisia}/>
             </div>
+        )
+    }
+
+    const Statistic = ({teksti, statistiikka}) => {
+        if (!statistiikka) {
+            return (
+                <p>{teksti}: 0</p>
+            )
+        }
+        if (teksti == 'Positiivisia') {
+            return (
+                <p>{teksti}: {statistiikka}%</p>
+            )
+        }
+        return (
+        <p>{teksti}: {statistiikka}</p>
         )
     }
 
