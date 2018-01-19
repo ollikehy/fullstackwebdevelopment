@@ -58,13 +58,13 @@ class App extends React.Component {
         return (
             <div>
                 <h3>Statistiikka</h3>
-                <table>
+                <table><tbody>
                     <Statistic teksti='Hyvä' statistiikka={hyva}/>
                     <Statistic teksti='Neutraali' statistiikka={neutraali}/>
                     <Statistic teksti='Huono' statistiikka={huono}/>
                     <Statistic teksti='Keskiarvo' statistiikka={keskiarvo}/>
                     <Statistic teksti='Positiivisia' statistiikka={positiivisia}/>
-                </table>
+                </tbody></table>
             </div>
         )
     }
@@ -73,20 +73,20 @@ class App extends React.Component {
         if (!statistiikka) {
             return (
                 <tr>
-                    <td>{teksti}</td><td> 0</td>
+                    <td>{teksti}</td><td>0</td>
                 </tr>
             )
         }
         if (teksti === 'Positiivisia') {
             return (
                 <tr>
-                    <td>{teksti}</td> <td>{statistiikka}%</td>
+                    <td>{teksti}</td><td>{statistiikka}%</td>
                 </tr>
             )
         }
         return (
         <tr>
-            <td>{teksti}</td> <td>{statistiikka}</td>
+            <td>{teksti}</td><td>{statistiikka}</td>
         </tr>
         )
     }
