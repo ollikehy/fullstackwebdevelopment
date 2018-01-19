@@ -42,6 +42,14 @@ class App extends React.Component {
         var yhteensa = hyva + neutraali + huono
         var keskiarvo =  (hyva - huono) / yhteensa
         var positiivisia = (hyva / yhteensa) * 100
+        if (!yhteensa) {
+            return(
+                <div>
+                    <h3>Statistiikka</h3>
+                    <p>Ei yhtään palautetta annettu</p>
+                </div>
+            )
+        }
         return (
             <div>
                 <h3>Statistiikka</h3>
@@ -60,7 +68,7 @@ class App extends React.Component {
                 <p>{teksti}: 0</p>
             )
         }
-        if (teksti == 'Positiivisia') {
+        if (teksti === 'Positiivisia') {
             return (
                 <p>{teksti}: {statistiikka}%</p>
             )
