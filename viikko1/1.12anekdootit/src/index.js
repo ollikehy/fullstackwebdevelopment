@@ -25,6 +25,11 @@ class App extends React.Component {
         this.setState({votes: this.state.votes})
     }
 
+    findMax = () => {
+        return this.state.votes.indexOf(Math.max(...this.state.votes))
+    }
+    
+
     render() {
         return (
             <div>
@@ -36,6 +41,10 @@ class App extends React.Component {
                 <button onClick={this.incrementVotes()}>
                  vote
                 </button>
+
+                <h3>Anecdote with most votes:</h3>
+                <p>{this.props.anecdotes[this.findMax()]}</p>
+                <p>Has {Math.max(...this.state.votes)} votes</p>
             </div>
         )}
     }
