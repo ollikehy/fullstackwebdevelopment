@@ -11,24 +11,29 @@ class App extends React.Component {
         }
     }
 
-    kasvataHyvia = (arvo) => () => {this.setState({hyva : arvo})}
-    kasvataNeutraaleja = (arvo) => () => {this.setState({neutraali : arvo})}
-    kasvataHuonoja = (arvo) => () => {this.setState({huono : arvo})}
+    kasvataArvoa = (arvo) => () => { 
+        if (arvo === 'hyva') 
+        {this.setState({hyva: this.state.hyva + 1})}
+        else if (arvo ==='neutraali') 
+        {this.setState({neutraali: this.state.neutraali +1})}
+        else if (arvo ==='huono')
+        {this.setState({huono: this.state.huono +1})}
+        }
 
     render() {
      return (
         <div>
             <h2>Anna palautetta</h2>
-            <Button handleClick={this.kasvataHyvia(this.state.hyva + 1)}
+            <Button handleClick={this.kasvataArvoa('hyva')}
                     text="Hyvä"/>
-            <Button handleClick={this.kasvataNeutraaleja(this.state.neutraali + 1)}
+            <Button handleClick={this.kasvataArvoa('neutraali')}
                     text="Neutraali"/>
-            <Button handleClick={this.kasvataHuonoja(this.state.huono + 1)}
+            <Button handleClick={this.kasvataArvoa('huono')}
                     text="Huono"/>
             <Statistics hyva={this.state.hyva} neutraali={this.state.neutraali} huono={this.state.huono} />
         </div>
      )}
-}
+    }
 
     const Button = ({handleClick, text}) => {
         return (    
