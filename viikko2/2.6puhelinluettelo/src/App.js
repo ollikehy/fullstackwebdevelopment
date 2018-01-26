@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import personService from './service/persons';
 
 class App extends React.Component {
   constructor(props) {
@@ -10,48 +10,61 @@ class App extends React.Component {
       newNumber: '',
       haku: ''
     }
-  }
+    }
 
-  componentWillMount() {
-      axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-          this.setState({persons : response.data})
-      })
-  }
-
-  addPerson = (event) => {
-      event.preventDefault()
-      let flag = true
-      this.state.persons.forEach(person => {
-        if (person.name === this.state.newName) {
-            flag = false
-        }          
-      });
-    
-      if (flag) {
-       const personObject = {
-          name: this.state.newName,
-          id: this.state.persons.length + 1,
-          number: this.state.newNumber
-      }
-
-        const persons = this.state.persons.concat(personObject)
-        this.setState({
-            persons: persons
+    componentWillMount() {
+    personService
+     .getAll()
+     .then(response => {
+         this.setState({ persons : response})
         })
     }
-    this.setState({
-        newName: '',
-        newNumber: ''
-    })  
+
+    addPerson = (event) => {
+       event.preventDefault()
+       let flag = true
+       this.state.persons.forEach(person => {
+         if (person.name === this.state.newName) {
+             flag = false
+         }          
+       });
     
+       if (flag) {
+        const personObject = {
+           name: this.state.newName,
+           id: this.state.persons.length + 1,
+           number: this.state.newNumber
+       }
+
+       personService
+       .create(personObject)
+       .then(newPerson => {
+           this.setState({
+               persons: this.state.persons.concat(newPerson)
+           })
+       })
+     }
+     this.setState({
+         newName: '',
+         newNumber: ''
+        })  
+    }
+
+    handleDelete = ({id, name}) => {
+        if (window.confirm(`Do you really want to delete ${name}?`)) {
+        console.log('deleted');
+        personService
+        .deleteOne(id)
+        .then(response => {
+            const personsU = this.state.persons.filter(p => p.id !== id)
+            this.setState({persons : personsU})
+        })
+    }
     }
 
     handleNameChange = (event) => {
         this.setState({newName: event.target.value})
     }
-
 
     handleNumberChange = (event) => {
         this.setState({newNumber: event.target.value})
@@ -62,7 +75,9 @@ class App extends React.Component {
     }
 
   render() {
-    const filtered = this.state.persons.filter(person => person.name.toLowerCase().includes(this.state.haku.toLowerCase()))
+    const filtered = this.state.persons
+                     .filter(person => person.name.toLowerCase()
+                     .includes(this.state.haku.toLowerCase()))
     return (
       <div>
         <h2>Puhelinluettelo</h2>
@@ -75,19 +90,19 @@ class App extends React.Component {
             <button type="submit">lisää</button>
           </div>
         </form>
-        <Numbers persons={filtered} haku={this.state.haku}/>
+        <Numbers onClick={this.handleDelete} persons={filtered} haku={this.state.haku}/>
       </div>
     )
   }
 }
 
-const Numbers = ({persons, haku}) => {
+const Numbers = ({persons, haku, onClick}) => {
     return (
         <div>
         <h3>Numerot</h3>
             <table>
                 <tbody>
-                {persons.map(person=><Person key={person.id} name={person.name} number={person.number} haku={haku}/>)}
+                {persons.map(person=><Person onClick={onClick} key={person.id} id={person.id} name={person.name} number={person.number} haku={haku}/>)}
                 </tbody>
             </table>
         </div>
@@ -102,9 +117,12 @@ const Input = ({text, value, onChange}) => {
         )
 }
 
-const Person = ({name, number, haku}) => {
+const Person = ({onClick, id, name, number, haku}) => {
     return (
-        <tr><td>{name}</td><td>{number}</td></tr>
+        <tr><td>{name}</td>
+            <td>{number}</td>
+            <td><button onClick={() => onClick({id, name})}>poista</button></td>    
+        </tr>
     )
 }
 

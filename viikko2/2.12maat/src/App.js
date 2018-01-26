@@ -28,6 +28,7 @@ class App extends React.Component {
     }
 
     render() {
+        console.log('rendering');
         const filtered = this.state.countries.filter(country => country.name.includes(this.state.search))
         return(
             <div>
