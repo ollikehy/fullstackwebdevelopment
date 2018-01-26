@@ -22,14 +22,14 @@ class App extends React.Component {
 
     addPerson = (event) => {
        event.preventDefault()
-       let flag = true
+       let notListed = true
        this.state.persons.forEach(person => {
          if (person.name === this.state.newName) {
-             flag = false
+             notListed = false
          }          
        });
     
-       if (flag) {
+       if (notListed) {
         const personObject = {
            name: this.state.newName,
            id: this.state.persons.length + 1,
@@ -43,6 +43,20 @@ class App extends React.Component {
                persons: this.state.persons.concat(newPerson)
            })
        })
+     } else {
+         if (window.confirm(`Do you want to update the number for ${this.state.newName}?`)) {
+            const person = this.state.persons.find(p => p.name === this.state.newName)
+            const changedPerson = {...person, number: this.state.newNumber}
+
+            personService
+            .update(changedPerson.id, changedPerson)
+            .then(changedPerson => {
+                const persons = this.state.persons.filter(p => p.id !== changedPerson.id)
+                this.setState({
+                    persons: persons.concat(changedPerson)
+                })
+            } )
+         }
      }
      this.setState({
          newName: '',
