@@ -1,5 +1,6 @@
 import React from 'react';
 import personService from './service/persons';
+import './index.css'
 
 class App extends React.Component {
   constructor(props) {
@@ -8,7 +9,8 @@ class App extends React.Component {
       persons: [],
       newName: '',
       newNumber: '',
-      haku: ''
+      search: '',
+      message: ''
     }
     }
 
@@ -40,11 +42,13 @@ class App extends React.Component {
        .create(personObject)
        .then(newPerson => {
            this.setState({
-               persons: this.state.persons.concat(newPerson)
+               persons: this.state.persons.concat(newPerson),
+               message: `${this.state.newName} lisätty onnistuneesti`
            })
+           setTimeout(() => this.setState({message: ''}), 5000)
        })
      } else {
-         if (window.confirm(`Do you want to update the number for ${this.state.newName}?`)) {
+         if (window.confirm(`Haluatko päivittää numeron henkilölle ${this.state.newName}?`)) {
             const person = this.state.persons.find(p => p.name === this.state.newName)
             const changedPerson = {...person, number: this.state.newNumber}
 
@@ -53,9 +57,15 @@ class App extends React.Component {
             .then(changedPerson => {
                 const persons = this.state.persons.filter(p => p.id !== changedPerson.id)
                 this.setState({
-                    persons: persons.concat(changedPerson)
+                    persons: persons.concat(changedPerson),
+                    message: 'Numero päivitetty onnistuneesti'
                 })
-            } )
+                setTimeout(() => this.setState({message: ''}), 5000)
+            }).catch(error => {
+                alert(`henkilö ${changedPerson.name} on jo valitettavasti poistettu`)
+                const personsU = this.state.persons.filter(p => p.id !== person.id)
+                this.setState({persons: personsU})
+            })
          }
      }
      this.setState({
@@ -65,13 +75,15 @@ class App extends React.Component {
     }
 
     handleDelete = ({id, name}) => {
-        if (window.confirm(`Do you really want to delete ${name}?`)) {
+        if (window.confirm(`Haluatko varmasti poistaa ${name} listasta?`)) {
         console.log('deleted');
         personService
         .deleteOne(id)
         .then(response => {
             const personsU = this.state.persons.filter(p => p.id !== id)
-            this.setState({persons : personsU})
+            this.setState({persons : personsU,
+                           message: `${name} poistettu onnistuneesti`})
+            setTimeout(() => this.setState({message: ''}), 5000)               
         })
     }
     }
@@ -91,11 +103,12 @@ class App extends React.Component {
   render() {
     const filtered = this.state.persons
                      .filter(person => person.name.toLowerCase()
-                     .includes(this.state.haku.toLowerCase()))
+                     .includes(this.state.search.toLowerCase()))
     return (
       <div>
         <h2>Puhelinluettelo</h2>
-        <Input text='rajaa näytettäviä' value={this.state.haku} onChange={this.handleSearch}/>
+        <Error message={this.state.message}/>
+        <Input text='rajaa näytettäviä' value={this.state.search} onChange={this.handleSearch}/>
         <h3>Lisää uusi!</h3>
         <form onSubmit={this.addPerson}>
           <Input text='nimi' value={this.state.newName} onChange={this.handleNameChange}/>
@@ -104,10 +117,22 @@ class App extends React.Component {
             <button type="submit">lisää</button>
           </div>
         </form>
-        <Numbers onClick={this.handleDelete} persons={filtered} haku={this.state.haku}/>
+        <Numbers onClick={this.handleDelete} persons={filtered} haku={this.state.search}/>
       </div>
     )
   }
+}
+
+const Error = ({message}) => {
+    if (message.length > 1) {
+        return (
+            <div set className="message">
+            {message}
+            </div>
+        )
+    } else {
+        return null
+    }
 }
 
 const Numbers = ({persons, haku, onClick}) => {
@@ -116,7 +141,9 @@ const Numbers = ({persons, haku, onClick}) => {
         <h3>Numerot</h3>
             <table>
                 <tbody>
-                {persons.map(person=><Person onClick={onClick} key={person.id} id={person.id} name={person.name} number={person.number} haku={haku}/>)}
+                {persons.map(person=><Person onClick={onClick} 
+                             key={person.id} id={person.id} name={person.name} 
+                             number={person.number} haku={haku}/>)}
                 </tbody>
             </table>
         </div>
