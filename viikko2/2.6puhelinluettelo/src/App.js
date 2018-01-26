@@ -1,19 +1,23 @@
 import React from 'react';
+import axios from 'axios';
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      persons: [
-        { name: 'Arto Hellas', id: 1, number: 12345 },
-        { name: 'Jukka Kukka', id: 2, number: 12354 },
-        { name: 'Pekka Haavisto', id: 3, number: 3},
-        { name: 'Sean Connery', id: 4, number: 111007111}
-      ],
+      persons: [],
       newName: '',
       newNumber: '',
       haku: ''
     }
+  }
+
+  componentWillMount() {
+      axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+          this.setState({persons : response.data})
+      })
   }
 
   addPerson = (event) => {
