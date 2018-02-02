@@ -1,26 +1,30 @@
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.json())
 
 let persons = [
     {
-        id: 1,
         name: 'Olli',
-        number: '123-4567'
+        number: '123-4567',
+        id: 1
     },
     {
-        id: 2,
         name: 'Pekka',
-        number: '122-3213'
+        number: '122-3213',
+        id: 2,
     },
     {
-        id: 3,
+
         name: 'Matti',
-        number: '121-2231'
+        number: '121-2231',
+        id: 3,
     },
     {
-        id: 4,
         name: 'Teppo',
-        number: '120-2123'
+        number: '120-2123',
+        id: 4,
     }
 ]
 
@@ -30,14 +34,14 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/', (req, res) => {
-    res.redirect('/persons')
+    res.redirect('/api/persons')
 })
 
-app.get('/persons', (req, res) => {
+app.get('/api/persons', (req, res) => {
     res.json(persons)
 })
 
-app.get('/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     const person = persons.find(p => p.id === id)
     if (person) {
@@ -47,12 +51,30 @@ app.get('/persons/:id', (req, res) => {
     }
 })
 
-app.delete('/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     persons = persons.filter(p => p.id !== id)
 
     res.status(204).end()
 })
+
+app.post('/api/persons', (req, res) => {
+    const body = req.body
+    const generatedId = Math.floor(Math.random() * Math.floor(100000))
+    
+    if (body.number === undefined) {
+        return response.status(400).json({error: 'content missing'})
+    }
+
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: generatedId
+    }
+
+    persons = persons.concat(person)
+    res.json(person)
+}) 
 
 const PORT = 3001
 app.listen(PORT, () => {
