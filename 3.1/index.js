@@ -62,9 +62,15 @@ app.post('/api/persons', (req, res) => {
     const body = req.body
     const generatedId = Math.floor(Math.random() * Math.floor(100000))
     
-    if (body.number === undefined) {
-        return response.status(400).json({error: 'content missing'})
+    if (body.number === undefined || body.name === undefined) {
+        return res.status(400).json({error: 'content missing'})
     }
+    
+    persons.forEach(function(p) {
+        if (p.name === body.name) {
+            return res.status(400).json({error: 'name must be unique'})
+        }
+    })
 
     const person = {
         name: body.name,
