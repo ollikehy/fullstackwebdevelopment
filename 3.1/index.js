@@ -1,8 +1,11 @@
 const express = require('express')
 const app = express()
+
 const bodyParser = require('body-parser')
+const morgan = require('morgan')
 
 app.use(bodyParser.json())
+app.use(morgan(':method :url :content :status :res[content-length] - :response-time ms'))
 
 let persons = [
     {
@@ -66,7 +69,7 @@ app.post('/api/persons', (req, res) => {
         return res.status(400).json({error: 'content missing'})
     }
     
-    persons.forEach(function(p) {
+    persons.forEach((p) => {
         if (p.name === body.name) {
             return res.status(400).json({error: 'name must be unique'})
         }
@@ -77,7 +80,7 @@ app.post('/api/persons', (req, res) => {
         number: body.number,
         id: generatedId
     }
-
+    morgan.token('content', (req, res) => { return JSON.stringify(req.body)})
     persons = persons.concat(person)
     res.json(person)
 }) 
