@@ -24,6 +24,11 @@ let persons = [
     }
 ]
 
+app.get('/info', (req, res) => {
+    res.send(`<p> Puhelinluettelossa ${persons.length} henkilön tiedot</p>
+              <p> ${new Date()} </p>`)
+})
+
 app.get('/', (req, res) => {
     res.redirect('/persons')
 })
