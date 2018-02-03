@@ -97,7 +97,7 @@ class App extends React.Component {
     }
 
     handleSearch = (event) => {
-        this.setState({haku: event.target.value})
+        this.setState({search: event.target.value})
     }
 
   render() {
