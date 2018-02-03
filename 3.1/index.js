@@ -50,23 +50,26 @@ app.get('/api/persons', (req, res) => {
 
 app.get('/api/persons/:id', (req, res) => {
     const id = req.params.id
-    const person = Person.findById(req.params.id)
-    if (person) {
-        Person
-            .findById(req.params.id)
-            .then(person => {
-                res.json(Person.formatPerson(person))
-            })
-    } else {
+    Person
+        .findById(req.params.id)
+        .then(person => {
+            res.json(Person.formatPerson(person))
+        })
+        .catch(error => {
+        console.log(error)
         res.status(404).end()
-    }
+    })
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    persons = persons.filter(p => p.id !== id)
-
-    res.status(204).end()
+    Person
+        .findByIdAndRemove(req.params.id)
+        .then(result => {
+            res.status(204).end()
+        })
+        .catch(error => {
+            res.status(400).send({error: 'malformatted id'})
+        })
 })
 
 app.post('/api/persons', (req, res) => {
@@ -95,6 +98,25 @@ app.post('/api/persons', (req, res) => {
             res.json(Person.formatPerson(savedPerson))
         })
 }) 
+
+app.put('/api/persons/:id', (req, res) => {
+    const body = req.body
+
+    const person = {
+        name: body.name,
+        number: body.number
+    }
+
+    Person
+        .findByIdAndUpdate(req.params.id, person, {new: true})
+        .then(updatedPerson => {
+            res.json(Person.formatPerson(person))
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(400).send({error: 'malformed id'})
+        })
+})
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
