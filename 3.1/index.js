@@ -84,24 +84,27 @@ app.post('/api/persons', (req, res) => {
         return res.status(400).json({error: 'content missing'})
     }
     
-    persons.forEach((p) => {
-        if (p.name === body.name) {
-            return res.status(400).json({error: 'name must be unique'})
-        }
-    })
-
     const person = new Person({
         name: body.name,
         number: body.number,
         id: generatedId
     })
-    
-    person
-        .save()
-        .then(savedPerson => {
-            res.json(Person.formatPerson(savedPerson))
+
+    Person
+        .find({name: req.body.name})
+        .then(result => {
+            console.log(result.length);
+            if (result.length > 0) { 
+                res.status(400).send({error: 'person already in database'}).end()
+            } else {
+                person
+                    .save()
+                    .then(savedPerson => {
+                        res.json(Person.formatPerson(savedPerson))
+                    })
+            }
         })
-}) 
+    }) 
 
 app.put('/api/persons/:id', (req, res) => {
     const body = req.body
