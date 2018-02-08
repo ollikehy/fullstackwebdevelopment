@@ -65,6 +65,14 @@ describe('favourite blog', () => {
     })
 })
 
+describe('most blogs', () => {
+    test('when given a list returns author with most blogs', () => {
+        const result = listHelper.mostBlogs(blogs)
+        expect(result.name).toBe("Robert C. Martin")
+        expect(result.blogsWritten).toEqual(3)
+    }) 
+})
+
 describe('total likes', () => {
     test('when given a list total likes is accurate', () => {
         const result = listHelper.totalLikes(blogs)
