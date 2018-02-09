@@ -80,6 +80,17 @@ test('a blog with no likes set has likes set to 0', async () => {
     expect(blogLikes[response.body.length-1]).toEqual(0)
 }) 
 
+test('adding a blog with no title and url results to errorcode 400', async () => {
+    const newBlog = {
+        author: 'Test User',
+        likes: 0
+    }  
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+})
 
 afterAll(() => {
     server.close()
