@@ -1,7 +1,11 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const url = 'mongodb://kayttaja:salasana@ds229418.mlab.com:29418/fullstack-blog'
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+}
+
+const url = process.env.MONGODB_URI
 
 mongoose.connect(url)
 
@@ -14,7 +18,7 @@ let blogSchema = new Schema({
     likes: Number
 })
 
-blogSchema.statics.formatBlog = function(blog) {
+blogSchema.statics.formatBlog = (blog) => {
     return {
         id: blog._id,
         title: blog.title,
