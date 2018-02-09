@@ -1,20 +1,20 @@
 const http = require('http')
 const express = require('express')
 const app = express()
-const bodyParser = require('body-parser')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const blogsRouter = require('./controllers/blogs')
 const Blog = require('./models/blog')
 const config = require('./utils/config')
+const bodyParser = require('body-parser')
 
-app.use('/api/blogs', blogsRouter)
+mongoose.connect(config.mongoUrl)
+mongoose.Promise = global.Promise
+
 app.use(cors())
 app.use(bodyParser.json())
 
-const mongoUrl = 'mongodb://kayttaja:salasana@ds229418.mlab.com:29418/fullstack-blog'
-mongoose.connect(config.mongoUrl)
-mongoose.Promise = global.Promise
+app.use('/api/blogs', blogsRouter)
 
 const server = http.createServer(app)
 

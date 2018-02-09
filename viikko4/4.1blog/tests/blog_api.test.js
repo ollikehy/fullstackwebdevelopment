@@ -25,11 +25,9 @@ const initialBlogs = [
 beforeAll(async () => {
     await Blog.remove({})
 
-    let blogObject = new Blog(initialBlogs[0])
-    await blogObject.save()
-
-    blogObject = new Blog(initialBlogs[1])
-    await blogObject.save()
+    const blogObjects = initialBlogs.map(blog => new Blog(blog))
+    const promiseArray = blogObjects.map(blog => blog.save())
+    await Promise.all(promiseArray)
 })
 
 test('blogs are returned as json', async () =>{
@@ -37,7 +35,31 @@ test('blogs are returned as json', async () =>{
         .get('/api/blogs')
         .expect(200)
         .expect('Content-Type', /application\/json/)
+    })
+
+
+test('a valid blog can be added', async () => {
+    const newBlog = {
+        title: 'Test Wars',
+        author: 'Test User',
+        url: 'http://blog.test.com',
+        likes: 3,
+    }  
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+        const response = await api
+            .get('/api/blogs')
+
+        const titles = response.body.map(r => r.title)
+
+        expect(response.body.length).toBe(initialBlogs.length +1)
+        expect(titles).toContain('Test Wars')
 })
+
 
 afterAll(() => {
     server.close()
