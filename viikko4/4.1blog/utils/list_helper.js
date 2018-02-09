@@ -46,9 +46,35 @@ const mostBlogs = (blogs) => {
     return returned
 }
 
+const mostLikes = (blogs) => {
+
+    const authors = []
+
+    blogs.forEach(blog => {
+        if (authors.some(a => a.name === blog.author)) {
+            authIndex = authors.findIndex(a => a.name === blog.author)
+            authors[authIndex].totalLikes = authors[authIndex].totalLikes + blog.likes
+        } else {
+            let author = {name: blog.author, totalLikes: blog.likes}
+            authors.push(author)
+        }
+    })
+    
+    let returned = {name: 'Null', totalLikes: 0}
+
+    authors.forEach(author => {
+        if (author.totalLikes > returned.totalLikes) {
+            returned = author
+        }
+    })
+
+    return returned
+}
+
 module.exports = {
     dummy,
     totalLikes,
     favouriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 }

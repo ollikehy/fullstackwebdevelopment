@@ -59,7 +59,7 @@ test('dummy is called', () => {
 })
 
 describe('favourite blog', () => {
-    test('when given a list returns favourite blog likes', () => {
+    test('when given a list returns likes of favourite blog', () => {
         const result = listHelper.favouriteBlog(blogs)
         expect(result).toEqual(12)
     })
@@ -74,8 +74,16 @@ describe('most blogs', () => {
 })
 
 describe('total likes', () => {
-    test('when given a list total likes is accurate', () => {
+    test('when given a list returns total likes', () => {
         const result = listHelper.totalLikes(blogs)
         expect(result).toBe(36)
     })
+})
+
+describe('most likes', () => {
+    test('when given a list returns author with most likes', () => {
+        const result = listHelper.mostLikes(blogs)
+        expect(result.name).toBe("Edsger W. Dijkstra")
+        expect(result.totalLikes).toEqual(17)
+    }) 
 })
