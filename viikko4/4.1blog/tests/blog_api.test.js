@@ -60,6 +60,26 @@ test('a valid blog can be added', async () => {
         expect(titles).toContain('Test Wars')
 })
 
+test('a blog with no likes set has likes set to 0', async () => {
+    const newBlog = {
+        title: 'Test Wars12',
+        author: 'Test User',
+        url: 'http://blog.test.com'
+    }  
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+    
+    const response = await api
+        .get('/api/blogs')
+    
+    const blogLikes = response.body.map(r => r.likes)
+    expect(blogLikes[response.body.length-1]).toEqual(0)
+}) 
+
 
 afterAll(() => {
     server.close()
