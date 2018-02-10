@@ -30,7 +30,7 @@ blogsRouter.post('/', async (request, response) => {
     })
 
     const savedBlog = await blog.save()
-    response.status(201).json(Blog.formatBlog(blog)).send()
+    response.status(201).json(Blog.formatBlog(savedBlog)).send()
 
   } catch (exception) {
       console.log(exception)
@@ -47,6 +47,30 @@ blogsRouter.delete('/:id', async (request, response) => {
   } catch (exception) {
     console.log(exception)
     response.status(400).send({error: 'malformatted id'})
+  }
+})
+
+blogsRouter.put('/:id', async (request, response) => {
+  try {
+    const body = request.body
+
+    if (body === undefined) {
+      return response.status(400).json({error: 'content missing'})
+    }
+
+    const blog = {
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      likes: body.likes
+    }
+
+    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog)
+    return response.status(200).json(Blog.formatBlog(updatedBlog)).send()
+  
+  } catch (exception) {
+    console.log(exception)
+    return response.status(400).send({error: 'something went wrong'})
   }
 })
 

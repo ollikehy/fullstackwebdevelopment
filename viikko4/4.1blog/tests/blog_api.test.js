@@ -115,6 +115,40 @@ describe('deletion of a note', async () => {
 
     })
 })
+describe('updating a note', async () => {
+    let addedBlog
+
+    beforeAll(async () => {
+        addedBlog = new Blog({
+            title: 'Blog',
+            author: 'Author',
+            url: 'url',
+            likes: 0
+        })
+        await Blog.remove({})
+        await addedBlog.save()
+    })
+    test('PUT /api/blogs/:id succesfully updates blog', async () => {
+        const updatedBlog = new Blog({
+            title: 'Title',
+            author: 'author',
+            url: 'url',
+            likes: 50
+        })
+        await api
+            .put(`/api/blogs/${addedBlog._id}`)
+            .send(updatedBlog)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+
+        const response = await api
+        .get('/api/blogs')
+        
+        const likes = response.body.map(r => r.likes)
+        expect(likes).toContain(50)
+    })
+})
 afterAll(() => {
     server.close()
 })
