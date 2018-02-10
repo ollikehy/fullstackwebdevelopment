@@ -9,7 +9,6 @@ describe('when there is initially some blogs saved', async () => {
         await Blog.remove({})
 
         const blogObjects = initialBlogs.map(blog => new Blog(blog))
-        
         await Promise.all(blogObjects.map(b => b.save()))
     })
 
@@ -39,6 +38,7 @@ describe('addition of a new blog', async () => {
             url: 'http://blog.test.com',
             likes: 3,
         }  
+
         await api
             .post('/api/blogs')
             .send(newBlog)
@@ -84,6 +84,35 @@ describe('addition of a new blog', async () => {
             .post('/api/blogs')
             .send(newBlog)
             .expect(400)
+    })
+})
+describe('deletion of a note', async () => {
+    let addedBlog
+
+    beforeAll(async () => {
+        addedBlog = new Blog({
+            title: 'Blog',
+            author: 'Author',
+            url: 'url',
+            likes: 0
+        })
+        await Blog.remove({})
+        await addedBlog.save()
+    })
+
+    test('DELETE /api/blogs/:id succeeds with proper statuscode', async () => {
+        const blogsAtStart = await blogsInDb()
+
+        await api
+            .delete(`/api/blogs/${addedBlog._id}`)
+            .expect(204)
+
+        const blogsAfterOperation = await blogsInDb()
+        const titles = blogsAfterOperation.map(b => b.title)
+
+        expect(titles).not.toContain(addedBlog.title)
+        expect(blogsAfterOperation.length).toBe(blogsAtStart.length -1)
+
     })
 })
 afterAll(() => {

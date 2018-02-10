@@ -6,7 +6,7 @@ blogsRouter.get('/', async (request, response) => {
     response.json(blogs.map(Blog.formatBlog))
 })
   
-blogsRouter.post('/', (request, response) => {
+blogsRouter.post('/', async (request, response) => {
   try {
     const body = request.body 
     
@@ -29,16 +29,25 @@ blogsRouter.post('/', (request, response) => {
       likes: setLikes
     })
 
-    blog
-      .save()
-      .then(result => {
-      response.status(201).json(result)
-      })
-    } catch (exception) {
+    const savedBlog = await blog.save()
+    response.status(201).json(Blog.formatBlog(blog)).send()
+
+  } catch (exception) {
       console.log(exception)
       response.status(500).json({error: 'something went wrong'})
   }
 
 }) 
+
+blogsRouter.delete('/:id', async (request, response) => {
+  try {
+    await Blog.findByIdAndRemove(request.params.id)
+
+    response.status(204).end()
+  } catch (exception) {
+    console.log(exception)
+    response.status(400).send({error: 'malformatted id'})
+  }
+})
 
 module.exports = blogsRouter
