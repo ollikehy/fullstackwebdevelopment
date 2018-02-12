@@ -12,23 +12,31 @@ usersRouter.post('/', async (request, response) => {
         const body = request.body
         
         const existingUser = await User.find({username: body.username})
-        if (existingUser.length >0) {
-            return response.status(400).json({error: 'username already taken'})
+        if (existingUser.length > 0) {
+            return response.status(400).json({error: 'username must be unique'})
+        } else if (body.password.length < 3) {
+            return response.status(400).json({error: 'password needs to be atleast 3 symbols long'})
+        } else if (body.username.length < 0) {
+            return response.status(400).json({error: 'username must not be empty'})
         }
 
-        console.log(body);
         const saltRounds = 10
-        const passwordHash = await bcrypt.hash(body.salasana, saltRounds)
+        const passwordHash = await bcrypt.hash(body.password, saltRounds)
+        let setAdult = false
+        if (body.adult === undefined) {
+            setAdult = true
+        } else {
+            setAdult = false
+        }
 
         const user = new User({
             username: body.username,
             name: body.name,
             passwordHash,
-            adult: body.adult
+            adult: setAdult
         })
 
         const savedUser = await user.save()
-
         response.json(savedUser)
     } catch (exception) {
         console.log(exception)

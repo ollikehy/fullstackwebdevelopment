@@ -51,6 +51,7 @@ const blogs = [
     }  
 ]
 
+describe.skip('tests for backend', () => {
 test('dummy is called', () => {
     const blogs = []
 
@@ -86,4 +87,5 @@ describe('most likes', () => {
         expect(result.name).toBe("Edsger W. Dijkstra")
         expect(result.totalLikes).toEqual(17)
     }) 
+})
 })
