@@ -25,18 +25,12 @@ usersRouter.post('/', async (request, response) => {
 
         const saltRounds = 10
         const passwordHash = await bcrypt.hash(body.password, saltRounds)
-        let setAdult = false
-        if (body.adult === undefined) {
-            setAdult = true
-        } else {
-            setAdult = false
-        }
 
         const user = new User({
             username: body.username,
             name: body.name,
             passwordHash,
-            adult: setAdult
+            adult: body.adult === undefined ? true : body.adult
         })
 
         const savedUser = await user.save()

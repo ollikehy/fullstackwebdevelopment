@@ -1,10 +1,11 @@
 POST http://localhost:3001/api/blogs/
 content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RpMSIsImlkIjoiNWE4MWNlZGY3YjVjNzkyNmI1NDBiNWQwIiwiaWF0IjoxNTE4NDU5ODY0fQ.nZ_nL_0SIYyAYegHoFH9jgZdZv-Xhzd6LywXp-UvCck
 
 {
     "title": "Blogi",
     "author": "Olli",
     "url": "www.blog.fi",
     "likes": 0,
-    "userId": "5a81bff6939e60145ddc7f24"
+    "userId": "5a81cedf7b5c7926b540b5d0"
 }
