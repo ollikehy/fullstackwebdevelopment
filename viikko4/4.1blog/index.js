@@ -18,14 +18,16 @@ const tokenExtractor = (request, response, next) => {
   if (authorization && authorization.toLowerCase().startsWith('bearer')) {
     request.token = authorization.substring(7)
     next()
+  } else {
+    request.token = null
+    next()
   }
-  request.token = null
-  next()
 }
 
 app.use(cors())
 app.use(bodyParser.json())
 app.use(tokenExtractor)
+
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
