@@ -6,6 +6,7 @@ let blogSchema = new Schema({
     author: String,
     url: String,
     likes: Number,
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 })
 
 blogSchema.statics.formatBlog = (blog) => {
@@ -14,7 +15,8 @@ blogSchema.statics.formatBlog = (blog) => {
         title: blog.title,
         author: blog.author,
         url: blog.url,
-        likes: blog.likes
+        likes: blog.likes,
+        user: blog.user
     }
 }
 
