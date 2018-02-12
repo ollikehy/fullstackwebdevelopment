@@ -5,7 +5,7 @@ let blogSchema = new Schema({
     title: String,
     author: String,
     url: String,
-    likes: Number
+    likes: Number,
 })
 
 blogSchema.statics.formatBlog = (blog) => {
