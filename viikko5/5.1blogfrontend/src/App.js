@@ -2,6 +2,8 @@ import React from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import LoginForm from './components/LoginForm'
+import Togglable from './components/Togglable'
 
 class App extends React.Component {
   constructor(props) {
@@ -14,7 +16,8 @@ class App extends React.Component {
       newBlog: '',
       url: '',
       author: '',
-      message: ''
+      message: '',
+      visible: false
     }
   }
 
@@ -22,6 +25,13 @@ class App extends React.Component {
     blogService.getAll().then(blogs =>
       this.setState({ blogs })
     )
+
+    const loggedUserJSON = window.localStorage.getItem('loggedUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      this.setState({user})
+      blogService.setToken(user.token)
+    }
   } 
 
   login = async (event) => {
@@ -39,9 +49,7 @@ class App extends React.Component {
       this.setState({
         message: 'käyttäjätunnus tai salasana virheellinen',
       })
-      setTimeout(() => {
-        this.setState({ message: '' })
-      }, 5000)
+      setTimeout(() => { this.setState({ message: '' })}, 5000)
     }
   }  
 
@@ -113,35 +121,21 @@ class App extends React.Component {
         )}
       </div>
     )
-
     const loginForm = () => (
-      <div>
-        <h2>Kirjaudu sovellukseen</h2>
-        <form onSubmit={this.login}>
-          <div>
-            käyttäjätunnus
-              <input
-                type="text"
-                name="username"
-                value={this.state.username}
-                onChange={this.handleLoginFieldChange}
-              />
-          </div>
-          <div>
-            salasana
-              <input
-                type="password"
-                name="password"
-                value={this.state.password}
-                onChange={this.handleLoginFieldChange}
-              />
-          </div>
-          <button type="submit">kirjaudu</button>
-        </form>
-      </div>
+      <Togglable buttonLabel='login'>
+        <LoginForm
+          visible={this.state.visible}
+          username={this.state.username}
+          password={this.state.password}
+          handleChange={this.handleLoginFieldChange}
+          handleSubmit={this.login}
+        />
+      </Togglable>
+
     )
     return (
     <div>
+      <h1>Blogit</h1>
       <h1>{this.state.message}</h1>
       {this.state.user === null ?
         loginForm() : blogsList()
