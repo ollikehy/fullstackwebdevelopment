@@ -10,7 +10,10 @@ class App extends React.Component {
       blogs: [],
       user: null,
       username: '',
-      password: ''
+      password: '',
+      newBlog: '',
+      url: '',
+      author: ''
     }
   }
 
@@ -41,6 +44,24 @@ class App extends React.Component {
     }
   }  
 
+  addBlog = (event) => {
+    event.preventDefault()
+    const blogObject = {
+      author: this.state.author,
+      title: this.state.newBlog,
+      url: this.state.url
+    }
+
+    blogService
+      .create(blogObject)
+      .then(newBlog => {
+        this.setState({
+          blogs: this.state.blogs.concat(newBlog),
+          newBlog: ''
+        })
+      })
+  }
+
   handleLoginFieldChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
   }
@@ -50,11 +71,39 @@ class App extends React.Component {
     window.location.reload()
   }
 
+  handleBlogChange = (event) => {
+    this.setState({ newBlog : event.target.value})
+  }
+
+  handleAuthorChange = (event) => {
+    this.setState({ author : event.target.value})
+  }
+
+  handleUrlChange = (event) => {
+    this.setState({ url : event.target.value})
+  }
+
   render() {
     const blogsList = () => (
       <div>
         <button onClick={this.handleLogOut}>logout</button>
-        <p>Tervetuloa sovellukseen {this.state.username}</p>
+        <h2>Tervetuloa sovellukseen {this.state.username}</h2>
+        <h3>Luo uusi blogi</h3>
+          <form onSubmit={this.addBlog}>
+            <div>title<input
+              value={this.state.newBlog}
+              onChange={this.handleBlogChange}
+            /></div>
+            <div>author<input
+              value={this.state.author}
+              onChange={this.handleAuthorChange}
+            /></div>
+            <div>url<input
+              value={this.state.url}
+              onChange={this.handleUrlChange}
+            /></div>
+            <div><button type="submit">tallenna</button></div>
+          </form>
         <h2>blogs</h2>
         {this.state.blogs.map(blog => 
           <Blog key={blog._id} blog={blog}/>
