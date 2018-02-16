@@ -13,7 +13,8 @@ class App extends React.Component {
       password: '',
       newBlog: '',
       url: '',
-      author: ''
+      author: '',
+      message: ''
     }
   }
 
@@ -36,10 +37,10 @@ class App extends React.Component {
       this.setState({ username: '', password: '', user})
     } catch(exception) {
       this.setState({
-        error: 'käyttäjätunnus tai salasana virheellinen',
+        message: 'käyttäjätunnus tai salasana virheellinen',
       })
       setTimeout(() => {
-        this.setState({ error: null })
+        this.setState({ message: '' })
       }, 5000)
     }
   }  
@@ -57,9 +58,11 @@ class App extends React.Component {
       .then(newBlog => {
         this.setState({
           blogs: this.state.blogs.concat(newBlog),
+          message: `blogi ${blogObject.title}, ${blogObject.author} lisätty`,
           newBlog: ''
         })
       })
+    setTimeout(() => this.setState({message: ''}), 5000)
   }
 
   handleLoginFieldChange = (event) => {
@@ -110,7 +113,7 @@ class App extends React.Component {
         )}
       </div>
     )
-    
+
     const loginForm = () => (
       <div>
         <h2>Kirjaudu sovellukseen</h2>
@@ -139,6 +142,7 @@ class App extends React.Component {
     )
     return (
     <div>
+      <h1>{this.state.message}</h1>
       {this.state.user === null ?
         loginForm() : blogsList()
       }
