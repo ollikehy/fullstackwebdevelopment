@@ -24,7 +24,7 @@ const BlogList = (props) => {
           </form>
         <h2>Blogit</h2>
         {props.blogs.map(blog => 
-            <Blog title={blog.title} author={blog.author} url={blog.url}/>
+            <Blog key={blog.id} blog={blog}/>
         )}
       </div>
     )

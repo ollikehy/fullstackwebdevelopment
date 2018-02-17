@@ -17,8 +17,6 @@ class App extends React.Component {
       url: '',
       author: '',
       message: '',
-      visible: false,
-      clickedBlog: null
     }
   }
 
@@ -103,10 +101,10 @@ class App extends React.Component {
         username={this.state.username}
         addBlog={this.addBlog}
         newBlog={this.state.newBlog}
-        handleBlogChange={this.handleBlogChange}
         author={this.state.author}
-        handleAuthorChange={this.handleAuthorChange}
         url={this.state.url}
+        handleBlogChange={this.handleBlogChange}
+        handleAuthorChange={this.handleAuthorChange}
         handleUrlChange={this.handleUrlChange}
         blogs={this.state.blogs}
       />
