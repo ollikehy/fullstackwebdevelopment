@@ -3,7 +3,8 @@ import Blog from './Blog'
 
 const BlogList = (props) => {
     const blogs = props.blogs.sort((a, b) => a.likes - b.likes < 0)
-
+    const signedUser = {username: props.user.username, token: props.userToken }
+    console.log(signedUser)
     return (
         <div>
         <button onClick={props.handleLogOut}>logout</button>
@@ -26,7 +27,7 @@ const BlogList = (props) => {
           </form>
         <h2>Blogit</h2>
         {blogs.map(blog => 
-            <Blog key={blog.id} blog={blog}/>
+            <Blog key={blog.id} blog={blog} signedUser={signedUser}/>
         )}
       </div>
     )

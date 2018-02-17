@@ -4,15 +4,15 @@ import BlogService from '../services/blogs'
 class Blog extends React.Component {
   constructor(props) {
     super(props)
-    console.log(props)
     this.state = {
       visible: false,
       title: props.blog.title,
       author: props.blog.author,
       url: props.blog.url,
       likes: props.blog.likes,
-      user: props.blog.user,
-      id: props.blog.id
+      user: props.blog.user ? props.blog.user : {username: 'Anonymous'},
+      id: props.blog.id,
+      signedUser: props.signedUser
     }
   }
 
@@ -20,10 +20,19 @@ class Blog extends React.Component {
     this.setState({visible : !this.state.visible})
   }
 
+  delete = (event) => {
+    if (window.confirm("Halautko varmasti poistaa tämän blogin?")) {
+      if (this.state.user.username === this.state.signedUser.username) {
+        BlogService.deleteBlog(this.state.id, this.state.signedUser.token)
+      } else if (this.state.user.username === 'Anonymous') {
+        BlogService.deleteBlog(this.state.id, this.state.signedUser.token)
+      }
+    }
+    window.location.reload()
+  }
+
   likeBlog = (event) => {
-    console.log(this.state.likes)
     this.setState({likes : this.state.likes + 1})
-    console.log(this.state.likes);
     const blogObject = {id: this.state.id,
                         user: this.state.user._id,
                         likes: this.state.likes,
@@ -43,6 +52,8 @@ class Blog extends React.Component {
           <div>{this.state.likes} likes
             <button style={buttonStyle} onClick={this.likeBlog}>like</button>
           </div>
+          <p>Added by {this.state.user.username}</p>
+          <button onClick={this.delete}>delete</button>
           </div>
         </div>
       )

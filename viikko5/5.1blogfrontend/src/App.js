@@ -107,6 +107,8 @@ class App extends React.Component {
         handleAuthorChange={this.handleAuthorChange}
         handleUrlChange={this.handleUrlChange}
         blogs={this.state.blogs}
+        user={this.state.user}
+        userToken={this.state.user.token}
       />
     )
     const loginForm = () => (
