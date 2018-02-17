@@ -2,6 +2,8 @@ import React from 'react'
 import Blog from './Blog'
 
 const BlogList = (props) => {
+    const blogs = props.blogs.sort((a, b) => a.likes - b.likes < 0)
+
     return (
         <div>
         <button onClick={props.handleLogOut}>logout</button>
@@ -23,7 +25,7 @@ const BlogList = (props) => {
             <div><button type="submit">tallenna</button></div>
           </form>
         <h2>Blogit</h2>
-        {props.blogs.map(blog => 
+        {blogs.map(blog => 
             <Blog key={blog.id} blog={blog}/>
         )}
       </div>
