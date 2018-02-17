@@ -1,8 +1,8 @@
 import React from 'react'
-import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import LoginForm from './components/LoginForm'
+import BlogList from './components/BlogList'
 import Togglable from './components/Togglable'
 
 class App extends React.Component {
@@ -17,7 +17,8 @@ class App extends React.Component {
       url: '',
       author: '',
       message: '',
-      visible: false
+      visible: false,
+      clickedBlog: null
     }
   }
 
@@ -58,7 +59,8 @@ class App extends React.Component {
     const blogObject = {
       author: this.state.author,
       title: this.state.newBlog,
-      url: this.state.url
+      url: this.state.url,
+      likes: 0
     }
 
     blogService
@@ -96,30 +98,18 @@ class App extends React.Component {
 
   render() {
     const blogsList = () => (
-      <div>
-        <button onClick={this.handleLogOut}>logout</button>
-        <h2>Tervetuloa sovellukseen {this.state.username}</h2>
-        <h3>Luo uusi blogi</h3>
-          <form onSubmit={this.addBlog}>
-            <div>title<input
-              value={this.state.newBlog}
-              onChange={this.handleBlogChange}
-            /></div>
-            <div>author<input
-              value={this.state.author}
-              onChange={this.handleAuthorChange}
-            /></div>
-            <div>url<input
-              value={this.state.url}
-              onChange={this.handleUrlChange}
-            /></div>
-            <div><button type="submit">tallenna</button></div>
-          </form>
-        <h2>blogs</h2>
-        {this.state.blogs.map(blog => 
-          <Blog key={blog._id} blog={blog}/>
-        )}
-      </div>
+      <BlogList
+        handleLogOut={this.handleLogOut}
+        username={this.state.username}
+        addBlog={this.addBlog}
+        newBlog={this.state.newBlog}
+        handleBlogChange={this.handleBlogChange}
+        author={this.state.author}
+        handleAuthorChange={this.handleAuthorChange}
+        url={this.state.url}
+        handleUrlChange={this.handleUrlChange}
+        blogs={this.state.blogs}
+      />
     )
     const loginForm = () => (
       <Togglable buttonLabel='login'>
