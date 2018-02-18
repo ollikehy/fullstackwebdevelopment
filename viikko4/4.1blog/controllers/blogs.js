@@ -68,8 +68,6 @@ blogsRouter.delete('/:id', async (request, response) => {
       return response.status(404).json({error: 'no blog found with given id'})
     }
 
-    console.log(blog.user);
-    console.log(decodedToken.id);
     if (blog.user) {
     if (blog.user.toString() !== decodedToken.id.toString()) {
       return response.status(403).json({error: 'only the author is allowed to delete this blog'})

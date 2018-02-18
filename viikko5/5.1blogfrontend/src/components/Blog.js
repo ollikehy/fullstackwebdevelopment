@@ -53,7 +53,7 @@ class Blog extends React.Component {
             <button style={buttonStyle} onClick={this.likeBlog}>like</button>
           </div>
           <p>Added by {this.state.user.username}</p>
-          <button onClick={this.delete}>delete</button>
+          <DeleteButton user={this.state.user} signedUser={this.state.signedUser} onClick={this.deleteBlog}/>
           </div>
         </div>
       )
@@ -66,6 +66,19 @@ class Blog extends React.Component {
   }
   }
 }
+
+const DeleteButton = (props) => {
+  if (props.user.username === props.signedUser.username || props.user.username === 'Anonymous') {
+    return (
+      <div>
+        <button onClick={props.onClick}>poista</button>
+      </div>
+    )
+  } else {
+    return null
+  }
+}
+
 const buttonStyle = {
   marginLeft: 5
 }
