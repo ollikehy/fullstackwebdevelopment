@@ -45,7 +45,7 @@ class Blog extends React.Component {
   render() {
     if (this.state.visible) {
       return (
-        <div style={blogStyle}>
+        <div className="fullView" style={blogStyle}>
           <h4 onClick={this.handleClick}>{this.state.title}: {this.state.author}</h4>
           <div>
           <a href={this.state.url}>{this.state.url}</a>
@@ -59,7 +59,7 @@ class Blog extends React.Component {
       )
     } else {
     return (
-      <div onClick={this.handleClick} style={blogStyle}>
+      <div className="simpleView" onClick={this.handleClick} style={blogStyle}>
         <h4>{this.state.title}: {this.state.author}</h4>
       </div>
     )
