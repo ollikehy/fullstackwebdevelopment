@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 const LoginForm = ({ handleSubmit, handleChange, username, password}) => {
     return (
-        <div>
+        <div className="loginForm">
             <h2>Kirjaudu sovellukseen</h2>
 
             <form onSubmit={handleSubmit}>
