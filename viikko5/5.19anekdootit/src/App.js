@@ -10,13 +10,25 @@ class App extends React.Component {
     })
   }
 
+  addAnecdote = (event) => {
+    event.preventDefault()
+    
+    this.props.store.dispatch({
+      type: 'ADD',
+      data: {
+        content: event.target.anecdote.value
+      }
+    })
+    event.target.anecdote.value = ''
+  }
+
   render() {
     const anecdotes = this.props.store.getState()
     const filteredAnecdotes = anecdotes.sort((a, b) => a.votes - b.votes < 0)
     return (
       <div>
         <h2>Anecdotes</h2>
-        {anecdotes.map(anecdote=>
+        {filteredAnecdotes.map(anecdote=>
           <div key={anecdote.id}>
             <div>
               {anecdote.content} 
@@ -28,9 +40,9 @@ class App extends React.Component {
           </div>
         )}
         <h2>create new</h2>
-        <form>
-          <div><input /></div>
-          <button>create</button> 
+        <form onSubmit={this.addAnecdote}>
+          <div><input name="anecdote"/></div>
+          <button type="submit">create</button> 
         </form>
       </div>
     )
