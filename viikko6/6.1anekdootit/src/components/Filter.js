@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 class Filter extends React.Component {
     handleChange = (event) => {
-        this.props.store.dispatch(changeFilter(event.target.value))
+        this.props.changeFilter(event.target.value)
     }
     render() {
       const style = {

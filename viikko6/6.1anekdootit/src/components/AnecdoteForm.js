@@ -8,9 +8,9 @@ class AnecdoteForm extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const content = e.target.anecdote.value
-    this.props.store.dispatch(anecdoteCreation(content))
-    this.props.store.dispatch(creating(content))
-    setTimeout(() => this.props.store.dispatch(setDefault()), 4000)
+    this.props.anecdoteCreation(content)
+    this.props.creating(content)
+    setTimeout(() => this.props.setDefault(), 4000)
     e.target.anecdote.value = ''
   }
 
