@@ -12,13 +12,10 @@ class AnecdoteList extends React.Component {
   }
 
   render() {
-    const {filter} = this.props
-    let {anecdotes} = this.props
-    anecdotes = anecdotes.filter(a => a.content.toLowerCase().includes(filter))
     return (
       <div>
         <h2>Anecdotes</h2>
-        {anecdotes.sort((a, b) => b.votes - a.votes).map(anecdote =>
+        {this.props.visibleAnecdotes.map(anecdote =>
           <div key={anecdote.id}>
             <div>
               {anecdote.content}
@@ -42,10 +39,15 @@ const mapDispatchToProps = {
   setDefault
 }
 
+const anecdotesToShow = (filter, anecdotes) => {
+  anecdotes = anecdotes.filter(a => a.content.toLowerCase().includes(filter))
+  anecdotes = anecdotes.sort((a, b) => b.votes - a.votes)
+  return anecdotes
+}
+
 const mapStateToProps = (state) => {
   return {
-    filter: state.filter,
-    anecdotes: state.anecdotes
+    visibleAnecdotes: anecdotesToShow(state.filter, state.anecdotes)
   }
 }
 
