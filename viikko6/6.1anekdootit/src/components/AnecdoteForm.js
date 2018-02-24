@@ -1,6 +1,7 @@
 import React from 'react'
 import { anecdoteCreation } from '../reducers/anecdoteReducer'
 import { creating, setDefault } from '../reducers/notificationReducer'
+import { connect } from 'react-redux'
 
 class AnecdoteForm extends React.Component {
 
@@ -26,4 +27,15 @@ class AnecdoteForm extends React.Component {
   }
 }
 
-export default AnecdoteForm
+const mapDispatchToProps = {
+  anecdoteCreation,
+  creating,
+  setDefault
+}
+
+const ConnectedAnecdoteForm = connect(
+  null,
+  mapDispatchToProps
+)(AnecdoteForm)
+
+export default ConnectedAnecdoteForm
