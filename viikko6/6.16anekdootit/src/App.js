@@ -53,11 +53,22 @@ const Footer = () => (
 )
 
 const Notification = ({notification}) => {
+  const notificationStyle = {
+    color: 'green',
+    marginTop: 10,
+    padding: 5,
+    maxWidth: 500,
+    border: 10,
+    borderStyle: 'ridge'
+    }
+  if (notification) {
   return(
-  <div>
+  <div style={notificationStyle}>
     <h3>{notification}</h3>
   </div>
-  )
+  ) } else {
+    return null
+  }
 }
 
 class CreateNew extends React.Component {
