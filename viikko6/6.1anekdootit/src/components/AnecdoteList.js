@@ -1,6 +1,6 @@
 import React from 'react'
 import {anecdoteVote} from '../reducers/anecdoteReducer'
-import { voting, setDefault } from '../reducers/notificationReducer'
+import { notify } from '../reducers/notificationReducer'
 import { connect } from 'react-redux'
 import anecdoteService from '../services/anecdotes'
 
@@ -8,10 +8,9 @@ class AnecdoteList extends React.Component {
 
   voting = async (anecdote) => {
     await anecdoteService.voteAnecdote(anecdote)
-    
+
     this.props.anecdoteVote(anecdote.id)
-    this.props.voting(anecdote.content)
-    setTimeout(() => this.props.setDefault(), 4000)
+    this.props.notify(`you voted for "${anecdote.content}"`, 4)
   }
 
   render() {
@@ -38,8 +37,7 @@ class AnecdoteList extends React.Component {
 
 const mapDispatchToProps = {
   anecdoteVote,
-  voting,
-  setDefault
+  notify
 }
 
 const anecdotesToShow = (filter, anecdotes) => {

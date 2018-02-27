@@ -2,37 +2,25 @@ const errorAtStart = ''
 
 const reducer = (state = errorAtStart, action) => {
     switch (action.type) {
-        case 'VOTING':
-            return state = 'you voted for "' + action.content + '"'
-        case 'CREATING':
-            return state = 'you created "' + action.content + '" anecdote'
         case 'DEFAULT':
             return state = errorAtStart
+        case 'NOTIFY':
+            return state = action.content
         default:
             return state
     }
 }
 
-export const voting = (content) => {
-    console.log('voting')
-    return {
-        type: 'VOTING',
+export const notify = (content, time) => {
+    console.log('notifying')
+    return async (dispatch) => {
+    dispatch({
+        type: 'NOTIFY',
         content
-    }
-}
-
-export const creating = (content) => {
-    console.log('creating')
-    return {
-        type: 'CREATING',
-        content
-    }
-}
-
-export const setDefault = () => {
+    })
+    setTimeout(() => dispatch({type: 'DEFAULT'}), time*1000)
     console.log('defaulting')
-    return {
-        type: 'DEFAULT'
     }
 }
+
 export default reducer
