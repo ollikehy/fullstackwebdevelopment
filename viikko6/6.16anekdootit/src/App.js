@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Link} from 'react-router-dom'
+import {Container, Table} from 'semantic-ui-react'
 
 const Menu = () => {
   const menuStyle = {
@@ -22,11 +23,15 @@ const Menu = () => {
 const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
+    <Table celled>
+    <Table.Body>
     <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >
+      {anecdotes.map(anecdote => <Table.Row><Table.Cell><li key={anecdote.id} >
         <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
-      </li>)}
-    </ul>  
+      </li></Table.Cell></Table.Row>)}
+    </ul>
+    </Table.Body>
+    </Table>  
   </div>
 )
 
@@ -185,26 +190,29 @@ class App extends React.Component {
 
   render() {
     return (
+    <Container>
+      <head>
+        <link  rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"></link>
+      </head>
       <div>
         <Router>
           <div>
         <h1>Software anecdotes</h1>
           <Menu />
           <Notification notification={this.state.notification}/>
-          <div>
-            <Route exact path="/" render={() => <AnecdoteList anecdotes={this.state.anecdotes}/>}/>
-            <Route exact path="/anecdotes/:id" render={({match}) =>
-              <Anecdote anecdote={this.anecdoteById(match.params.id)} />}
-            />
+            <Route exact path="/" render={() => 
+            <AnecdoteList anecdotes={this.state.anecdotes}/>}/>
+              <Route exact path="/anecdotes/:id" render={({match}) =>
+                <Anecdote anecdote={this.anecdoteById(match.params.id)} />}/>
             <Route path="/about" render={() => <About />}/>
             <Route path="/create" render={({history}) => <CreateNew history={history} addNew={this.addNew}/>}/>
           </div>
-      </div>
-      </Router>
-      <div>
-        <Footer />
-      </div>
+        </Router>
     </div>
+    <div>
+      <Footer />
+    </div>
+    </Container>
     );
   }
 }
