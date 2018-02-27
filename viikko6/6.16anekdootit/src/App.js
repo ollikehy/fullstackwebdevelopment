@@ -1,21 +1,22 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Link} from 'react-router-dom'
-import {Container, Table, Grid, Image} from 'semantic-ui-react'
+import {Container, Table, Grid, Image, Input, Button, Form} from 'semantic-ui-react'
 
 const Menu = () => {
   const menuStyle = {
     fontSize: 18,
-    backgroundColor: '#ccddff',
+    backgroundColor: '#e6e6e6',
     fontColor: 'black',
-    maxWidth: 250,
+    maxWidth: 300,
     border: 'solid',
-    padding: 5
-  }
+    padding: 5,
+    marginBottom: 10
+    }
   return ( 
   <div style={menuStyle}>    
-    <Link to="/">anecdotes</Link>&nbsp;
-    <Link to="/create">create new</Link>&nbsp;
-    <Link to="/about">about</Link>&nbsp;
+    <Link to="/">Anecdotes</Link>&nbsp;&nbsp;
+    <Link to="/create">Create new</Link>&nbsp;&nbsp;
+    <Link to="/about">About</Link>&nbsp;
   </div>
   )
 }
@@ -125,22 +126,22 @@ class CreateNew extends React.Component {
   render() {
     return(
       <div>
-        <h2>create a new anecdote</h2>
-        <form onSubmit={this.handleSubmit}>
-          <div>
-            content 
-            <input name='content' value={this.state.content} onChange={this.handleChange} />
-          </div>
-          <div>
-            author
-            <input name='author' value={this.state.author} onChange={this.handleChange} />
-          </div>
-          <div>
-            url for more info
-            <input name='info' value={this.state.info} onChange={this.handleChange} />
-          </div> 
-          <button>create</button>
-        </form>
+        <h2>Create a new anecdote</h2>
+        <Form onSubmit={this.handleSubmit}>
+          <Form.Field width={10}>
+            <label>Content</label>
+            <Input placeholder='Content' value={this.state.content} onChange={this.handleChange} />
+          </Form.Field>
+          <Form.Field width={10}>
+            <label>author</label>
+            <Input placeholder='Author' value={this.state.author} onChange={this.handleChange} />
+          </Form.Field>
+          <Form.Field width={10}>
+            <label>url for more info</label>
+            <Input placeholder='Info' value={this.state.info} onChange={this.handleChange} />
+          </Form.Field>
+          <Button>Create</Button>
+        </Form>
       </div>  
     )
   }
