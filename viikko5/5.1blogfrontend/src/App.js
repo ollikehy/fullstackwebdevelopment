@@ -4,6 +4,9 @@ import loginService from './services/login'
 import LoginForm from './components/LoginForm'
 import BlogList from './components/BlogList'
 import Togglable from './components/Togglable'
+import Notification from './components/Notification'
+import { notify } from './reducers/notificationReducer'
+import { connect } from 'react-redux'
 
 class App extends React.Component {
   constructor(props) {
@@ -16,7 +19,6 @@ class App extends React.Component {
       newBlog: '',
       url: '',
       author: '',
-      message: '',
     }
   }
 
@@ -45,10 +47,7 @@ class App extends React.Component {
       blogService.setToken(user.token)
       this.setState({ username: '', password: '', user})
     } catch(exception) {
-      this.setState({
-        message: 'käyttäjätunnus tai salasana virheellinen',
-      })
-      setTimeout(() => { this.setState({ message: '' })}, 5000)
+      this.props.notify('virheellinen käyttäjätunnus tai salasana', 5)
     }
   }  
 
@@ -66,12 +65,13 @@ class App extends React.Component {
       .then(newBlog => {
         this.setState({
           blogs: this.state.blogs.concat(newBlog),
-          message: `blogi ${blogObject.title}, ${blogObject.author} lisätty`,
-          newBlog: ''
+          newBlog: '',
+          author: '',
+          url: ''
         })
       })
-    setTimeout(() => this.setState({message: ''}), 5000)
-  }
+      this.props.notify(`blogi ${blogObject.title}, ${blogObject.author} lisätty`, 5)
+    }
 
   handleLoginFieldChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
@@ -126,7 +126,7 @@ class App extends React.Component {
     return (
     <div>
       <h1>Blogit</h1>
-      <h1>{this.state.message}</h1>
+      <Notification />
       {this.state.user === null ?
         loginForm() : blogsList()
       }
@@ -135,5 +135,13 @@ class App extends React.Component {
   }
 }
 
+const mapDispatchToProps = {
+  notify
+}
 
-export default App;
+const connectedApp = connect(
+  null,
+  mapDispatchToProps
+)(App)
+
+export default connectedApp
