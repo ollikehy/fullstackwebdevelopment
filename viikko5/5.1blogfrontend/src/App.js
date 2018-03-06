@@ -7,6 +7,7 @@ import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 import { notify } from './reducers/notificationReducer'
 import { connect } from 'react-redux'
+import { newBlog } from './reducers/blogReducer'
 
 class App extends React.Component {
   constructor(props) {
@@ -28,6 +29,7 @@ class App extends React.Component {
     )
 
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
+
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       this.setState({user})
@@ -42,11 +44,13 @@ class App extends React.Component {
         username: this.state.username,
         password: this.state.password
       })
-  
+      
+
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
       blogService.setToken(user.token)
       this.setState({ username: '', password: '', user})
     } catch(exception) {
+      console.log(exception)
       this.props.notify('virheellinen käyttäjätunnus tai salasana', 5)
     }
   }  
@@ -60,17 +64,14 @@ class App extends React.Component {
       likes: 0
     }
 
-    blogService
-      .create(blogObject)
-      .then(newBlog => {
-        this.setState({
-          blogs: this.state.blogs.concat(newBlog),
-          newBlog: '',
-          author: '',
-          url: ''
-        })
-      })
-      this.props.notify(`blogi ${blogObject.title}, ${blogObject.author} lisätty`, 5)
+    this.props.newBlog(blogObject)
+
+    this.setState({
+      newBlog: '',
+      author: '',
+      url: ''
+    })
+    this.props.notify(`blogi ${blogObject.title}, ${blogObject.author} lisätty`, 5)
     }
 
   handleLoginFieldChange = (event) => {
@@ -136,7 +137,8 @@ class App extends React.Component {
 }
 
 const mapDispatchToProps = {
-  notify
+  notify,
+  newBlog
 }
 
 const connectedApp = connect(

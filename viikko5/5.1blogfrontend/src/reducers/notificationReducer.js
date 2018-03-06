@@ -3,9 +3,9 @@ const initialState = ''
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case('DEFAULT'):
+        case 'DEFAULT':
             return state = initialState
-        case('CHANGE'):
+        case 'CHANGE':
             return state = action.data
         default:
             return state
