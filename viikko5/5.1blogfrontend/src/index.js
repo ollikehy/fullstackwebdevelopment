@@ -5,11 +5,11 @@ import store from './store'
 import { Provider } from 'react-redux'
 
 const render = () => {
-    ReactDOM.render(
+  ReactDOM.render(
     <div>
-    <Provider store={store}>
+      <Provider store={store}>
         <App />
-    </Provider>
+      </Provider>
     </div>,
     document.getElementById('root'))
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
 class Notification extends React.Component {
   render() {
@@ -9,7 +9,7 @@ class Notification extends React.Component {
       borderWidth: 1
     }
 
-    const {notification} = this.props
+    const { notification } = this.props
 
     if (notification === '') {
       return null

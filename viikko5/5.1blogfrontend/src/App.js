@@ -28,13 +28,13 @@ class App extends React.Component {
   componentDidMount() {
     this.props.blogInit()
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
-    
+
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      this.setState({user})
+      this.setState({ user })
       blogService.setToken(user.token)
     }
-  } 
+  }
 
   login = async (event) => {
     event.preventDefault()
@@ -47,12 +47,12 @@ class App extends React.Component {
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
 
       blogService.setToken(user.token)
-      this.setState({ username: '', password: '', user: user})
+      this.setState({ username: '', password: '', user: user })
     } catch(exception) {
       console.log(exception)
       this.props.notify('virheellinen käyttäjätunnus tai salasana', 5)
     }
-  }  
+  }
 
   addBlog = (event) => {
     event.preventDefault()
@@ -71,28 +71,28 @@ class App extends React.Component {
       url: ''
     })
     this.props.notify(`blogi ${blogObject.title}, ${blogObject.author} lisätty`, 5)
-    }
+  }
 
   handleLoginFieldChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
   }
 
-  handleLogOut = (event) => {
+  handleLogOut = () => {
     this.props.resetUser()
     window.localStorage.clear()
     window.location.reload()
   }
 
   handleBlogChange = (event) => {
-    this.setState({ newBlog : event.target.value})
+    this.setState({ newBlog : event.target.value })
   }
 
   handleAuthorChange = (event) => {
-    this.setState({ author : event.target.value})
+    this.setState({ author : event.target.value })
   }
 
   handleUrlChange = (event) => {
-    this.setState({ url : event.target.value})
+    this.setState({ url : event.target.value })
   }
 
   render() {
@@ -131,14 +131,13 @@ class App extends React.Component {
           <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"></link>
         </head>
         <div>
-        <h1>Blogit</h1>
-        <Notification />
-        
-        {this.state.user === null ?
-          loginForm() : blogsList()}
+          <h1>Blogit</h1>
+          <Notification />
+          {this.state.user === null ?
+            loginForm() : blogsList()}
         </div>
       </Container>
-  )
+    )
   }
 }
 

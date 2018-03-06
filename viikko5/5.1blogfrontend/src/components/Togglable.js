@@ -1,5 +1,5 @@
 import React from 'react'
-import {Divider, Button} from 'semantic-ui-react'
+import { Divider, Button } from 'semantic-ui-react'
 
 class Togglable extends React.Component {
   constructor(props) {

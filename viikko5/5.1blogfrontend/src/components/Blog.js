@@ -11,18 +11,18 @@ class Blog extends React.Component {
       author: props.blog.author,
       url: props.blog.url,
       likes: props.blog.likes,
-      user: props.blog.user ? props.blog.user : {username: 'Anonymous'},
+      user: props.blog.user ? props.blog.user : { username: 'Anonymous' },
       id: props.blog.id,
       signedUser: props.signedUser
     }
   }
 
-  handleClick = (event) => {
-    this.setState({visible : !this.state.visible})
+  handleClick = () => {
+    this.setState({ visible : !this.state.visible })
   }
 
-  delete = (event) => {
-    if (window.confirm("Halautko varmasti poistaa tämän blogin?")) {
+  delete = () => {
+    if (window.confirm('Halautko varmasti poistaa tämän blogin?')) {
       if (this.state.user.username === this.state.signedUser.username) {
         BlogService.deleteBlog(this.state.id, this.state.signedUser.token)
       } else if (this.state.user.username === 'Anonymous') {
@@ -32,14 +32,14 @@ class Blog extends React.Component {
     window.location.reload()
   }
 
-  likeBlog = (event) => {
-    this.setState({likes : this.state.likes + 1})
-    const blogObject = {id: this.state.id,
-                        user: this.state.user._id,
-                        likes: this.state.likes,
-                        author: this.state.author,
-                        title: this.state.title,
-                        url: this.state.url}
+  likeBlog = () => {
+    this.setState({ likes : this.state.likes + 1 })
+    const blogObject = { id: this.state.id,
+      user: this.state.user._id,
+      likes: this.state.likes,
+      author: this.state.author,
+      title: this.state.title,
+      url: this.state.url }
     BlogService.likeBlog(blogObject)
   }
 
@@ -49,22 +49,22 @@ class Blog extends React.Component {
         <div className="fullView" style={blogStyle}>
           <h4 onClick={this.handleClick}>{this.state.title}: {this.state.author}</h4>
           <div>
-          <a href={this.state.url}>{this.state.url}</a>
-          <div>{this.state.likes} likes &nbsp; &nbsp;
+            <a href={this.state.url}>{this.state.url}</a>
+            <div>{this.state.likes} likes &nbsp; &nbsp;
             <Button color="instagram" onClick={this.likeBlog}>like</Button>
-          </div>
-          <p>Added by {this.state.user.username}</p>
-          <DeleteButton user={this.state.user} signedUser={this.state.signedUser} onClick={this.deleteBlog}/>
+            </div>
+            <p>Added by {this.state.user.username}</p>
+            <DeleteButton user={this.state.user} signedUser={this.state.signedUser} onClick={this.deleteBlog}/>
           </div>
         </div>
       )
     } else {
-    return (
-      <div className="simpleView" onClick={this.handleClick} style={blogStyle}>
-        <h4>{this.state.title}: {this.state.author}</h4>
-      </div>
-    )
-  }
+      return (
+        <div className="simpleView" onClick={this.handleClick} style={blogStyle}>
+          <h4>{this.state.title}: {this.state.author}</h4>
+        </div>
+      )
+    }
   }
 }
 
