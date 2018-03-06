@@ -7,13 +7,13 @@ import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 import { notify } from './reducers/notificationReducer'
 import { connect } from 'react-redux'
-import { newBlog } from './reducers/blogReducer'
+import { newBlog, blogInit } from './reducers/blogReducer'
 
 class App extends React.Component {
+
   constructor(props) {
     super(props)
     this.state = {
-      blogs: [],
       user: null,
       username: '',
       password: '',
@@ -24,10 +24,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    blogService.getAll().then(blogs =>
-      this.setState({ blogs })
-    )
-
+    this.props.blogInit()
+    
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
 
     if (loggedUserJSON) {
@@ -107,9 +105,10 @@ class App extends React.Component {
         handleBlogChange={this.handleBlogChange}
         handleAuthorChange={this.handleAuthorChange}
         handleUrlChange={this.handleUrlChange}
-        blogs={this.state.blogs}
+        blogs={this.props.blogs}
         user={this.state.user}
         userToken={this.state.user.token}
+        store={this.props.store}
       />
     )
     const loginForm = () => (
@@ -129,20 +128,26 @@ class App extends React.Component {
       <h1>Blogit</h1>
       <Notification />
       {this.state.user === null ?
-        loginForm() : blogsList()
-      }
+        loginForm() : blogsList()}
     </div>
   )
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    blogs: state.blogs
+  }
+}
+
 const mapDispatchToProps = {
   notify,
-  newBlog
+  newBlog,
+  blogInit
 }
 
 const connectedApp = connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(App)
 

@@ -6,7 +6,7 @@ const blogReducer = (state = [], action) => {
         return [...state, action.data]
     } 
     if (action.type === 'INIT_BLOGS') {
-        return action.data
+        return state = action.data
     } 
     if (action.type === 'LIKE') {
         const old = state.filter(b => b.id !== action.id)
@@ -32,10 +32,10 @@ export const getBlogs = () => {
 
 export const blogInit = () => {
     return async (dispatch) => {
-        const blogs = await blogService.getAll()
+        const data = await blogService.getAll()
         dispatch({
             type: 'INIT_BLOGS',
-            data: blogs
+            data
         })
     }
 }
