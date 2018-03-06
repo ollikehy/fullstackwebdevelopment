@@ -1,19 +1,35 @@
-import loginService from '../services/login'
+import loginService from '../services/users'
 
-const initialState = null
-
-const reducer = (state = initialState, action) => {
+const reducer = (state = [], action) => {
   switch (action.type) {
   case('LOGIN'):
     return action.user
   case('TOKEN'):
     return state.token
+  case('INIT_USERS'):
+    return action.data
   case('USER'):
     return state
-  case('RESET'):
-    return state = initialState
   default:
     return state
+  }
+}
+
+export const initUsers = () => {
+  return async (dispatch) => {
+    const users = await loginService.getUsers()
+    await dispatch({
+      type: 'INIT_USERS',
+      data: users
+    })
+  }
+}
+
+export const getUser = () => {
+  return async (dispatch) => {
+    dispatch({
+      type: 'USER'
+    })
   }
 }
 
@@ -21,22 +37,6 @@ export const getToken = () => {
   return async (dispatch) => {
     dispatch({
       type: 'TOKEN'
-    })
-  }
-}
-
-export const getUser = () => {
-  return async (dispatch) => {
-    await dispatch({
-      type: 'USER'
-    })
-  }
-}
-
-export const resetUser = () => {
-  return async (dispatch) => {
-    dispatch({
-      type: 'RESET'
     })
   }
 }

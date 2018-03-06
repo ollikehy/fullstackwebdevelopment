@@ -7,7 +7,6 @@ const BlogList = (props) => {
   const signedUser = { username: props.user.username, token: props.userToken }
   return (
     <div>
-      <Button color="instagram" onClick={props.handleLogOut}>logout</Button>
       <h2>Tervetuloa sovellukseen {props.username}</h2>
       <h3>Luo uusi blogi</h3>
       <Form onSubmit={props.addBlog}>
