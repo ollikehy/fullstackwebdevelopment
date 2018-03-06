@@ -1,33 +1,46 @@
 import React from 'react'
 import Blog from './Blog'
+import {Form, Button, Table} from 'semantic-ui-react'
 
 const BlogList = (props) => {
     const blogs = props.blogs.sort((a, b) => a.likes - b.likes < 0)
     const signedUser = {username: props.user.username, token: props.userToken }
     return (
         <div>
-        <button onClick={props.handleLogOut}>logout</button>
+        <Button color="instagram" onClick={props.handleLogOut}>logout</Button>
         <h2>Tervetuloa sovellukseen {props.username}</h2>
         <h3>Luo uusi blogi</h3>
-          <form onSubmit={props.addBlog}>
-            <div>title<input
+          <Form onSubmit={props.addBlog}>
+            <Form.Field width="10">
+            <label>title</label>
+            <input
               value={props.newBlog}
               onChange={props.handleBlogChange}
-            /></div>
-            <div>author<input
+            /></Form.Field>
+            <Form.Field width="10">
+            <label>author</label>
+            <input
               value={props.author}
               onChange={props.handleAuthorChange}
-            /></div>
-            <div>url<input
+            /></Form.Field>
+            <Form.Field width="10">
+            <label>url</label>
+            <input
               value={props.url}
               onChange={props.handleUrlChange}
-            /></div>
-            <div><button type="submit">tallenna</button></div>
-          </form>
-        <h2>Blogit</h2>
-        {blogs.map(blog => 
-            <Blog key={blog.id} blog={blog} signedUser={signedUser}/>
-        )}
+            /></Form.Field>
+            <div><Button type="submit" color="instagram">tallenna</Button></div>
+          </Form>
+          <h2>Blogit</h2>
+          <Table>
+            <Table.Body>
+            {blogs.map(blog => 
+            <Table.Row width="11">
+                <Blog key={blog.id} blog={blog} signedUser={signedUser}/>
+            </Table.Row>
+            )}
+            </Table.Body>
+          </Table>
       </div>
     )
 }

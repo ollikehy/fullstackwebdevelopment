@@ -1,5 +1,6 @@
 import React from 'react'
 import BlogService from '../services/blogs'
+import { Button } from 'semantic-ui-react'
 
 class Blog extends React.Component {
   constructor(props) {
@@ -49,8 +50,8 @@ class Blog extends React.Component {
           <h4 onClick={this.handleClick}>{this.state.title}: {this.state.author}</h4>
           <div>
           <a href={this.state.url}>{this.state.url}</a>
-          <div>{this.state.likes} likes
-            <button style={buttonStyle} onClick={this.likeBlog}>like</button>
+          <div>{this.state.likes} likes &nbsp; &nbsp;
+            <Button color="instagram" onClick={this.likeBlog}>like</Button>
           </div>
           <p>Added by {this.state.user.username}</p>
           <DeleteButton user={this.state.user} signedUser={this.state.signedUser} onClick={this.deleteBlog}/>
@@ -71,16 +72,12 @@ const DeleteButton = (props) => {
   if (props.user.username === props.signedUser.username || props.user.username === 'Anonymous') {
     return (
       <div>
-        <button onClick={props.onClick}>poista</button>
+        <Button color="red" onClick={props.onClick}>poista</Button>
       </div>
     )
   } else {
     return null
   }
-}
-
-const buttonStyle = {
-  marginLeft: 5
 }
 
 const blogStyle = {

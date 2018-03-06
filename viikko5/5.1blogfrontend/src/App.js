@@ -1,13 +1,15 @@
 import React from 'react'
 import blogService from './services/blogs'
-import loginService from './services/login'
 import LoginForm from './components/LoginForm'
 import BlogList from './components/BlogList'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
-import { notify } from './reducers/notificationReducer'
 import { connect } from 'react-redux'
+import { notify } from './reducers/notificationReducer'
 import { newBlog, blogInit } from './reducers/blogReducer'
+import { login, resetUser, getUser } from './reducers/userReducer'
+import loginService from './services/login'
+import { Container } from 'semantic-ui-react'
 
 class App extends React.Component {
 
@@ -25,9 +27,8 @@ class App extends React.Component {
 
   componentDidMount() {
     this.props.blogInit()
-    
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
-
+    
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       this.setState({user})
@@ -42,11 +43,11 @@ class App extends React.Component {
         username: this.state.username,
         password: this.state.password
       })
-      
 
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
+
       blogService.setToken(user.token)
-      this.setState({ username: '', password: '', user})
+      this.setState({ username: '', password: '', user: user})
     } catch(exception) {
       console.log(exception)
       this.props.notify('virheellinen käyttäjätunnus tai salasana', 5)
@@ -77,6 +78,7 @@ class App extends React.Component {
   }
 
   handleLogOut = (event) => {
+    this.props.resetUser()
     window.localStorage.clear()
     window.location.reload()
   }
@@ -97,7 +99,7 @@ class App extends React.Component {
     const blogsList = () => (
       <BlogList
         handleLogOut={this.handleLogOut}
-        username={this.state.username}
+        username={this.props.getUser.username}
         addBlog={this.addBlog}
         newBlog={this.state.newBlog}
         author={this.state.author}
@@ -106,8 +108,8 @@ class App extends React.Component {
         handleAuthorChange={this.handleAuthorChange}
         handleUrlChange={this.handleUrlChange}
         blogs={this.props.blogs}
-        user={this.state.user}
-        userToken={this.state.user.token}
+        user={this.props.getUser}
+        userToken={this.props.getUser}
         store={this.props.store}
       />
     )
@@ -124,12 +126,18 @@ class App extends React.Component {
 
     )
     return (
-    <div>
-      <h1>Blogit</h1>
-      <Notification />
-      {this.state.user === null ?
-        loginForm() : blogsList()}
-    </div>
+      <Container>
+        <head>
+          <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"></link>
+        </head>
+        <div>
+        <h1>Blogit</h1>
+        <Notification />
+        
+        {this.state.user === null ?
+          loginForm() : blogsList()}
+        </div>
+      </Container>
   )
   }
 }
@@ -143,7 +151,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
   notify,
   newBlog,
-  blogInit
+  blogInit,
+  login,
+  resetUser,
+  getUser
 }
 
 const connectedApp = connect(

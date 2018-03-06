@@ -40,9 +40,10 @@ export const blogInit = () => {
     }
 }
 
-export const newBlog = (data) => {
+export const newBlog = (blog) => {
+    console.log('adding')
     return async (dispatch) => {
-        await blogService.create(data)
+        const data = await blogService.create(blog)
         dispatch({
             type: 'NEW_BLOG',
             data
