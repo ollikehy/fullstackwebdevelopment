@@ -17,11 +17,11 @@ const authors = [
     id: "afa5b6f1-344d-11e9-a414-719c6709cf3e",
     born: 1821
   },
-  { 
+  {
     name: 'Joshua Kerievsky', // birthyear not known
     id: "afa5b6f2-344d-11e9-a414-719c6709cf3e",
   },
-  { 
+  {
     name: 'Sandi Metz', // birthyear not known
     id: "afa5b6f3-344d-11e9-a414-719c6709cf3e",
   },
@@ -60,7 +60,7 @@ const books = [
     author: 'Joshua Kerievsky',
     id: "afa5de01-344d-11e9-a414-719c6709cf3e",
     genres: ['refactoring', 'patterns']
-  },  
+  },
   {
     title: 'Practical Object-Oriented Design, An Agile Primer Using Ruby',
     published: 2012,
@@ -148,11 +148,11 @@ const resolvers = {
   Mutation: {
     addBook: (root, args) => {
       if (!authors.find(a => a.name == args.author)) {
-        const author = {name: args.author, id: uuid()}
+        const author = { name: args.author, id: uuid() }
         authors.push(author)
       }
 
-      const book = {...args, id: uuid() }
+      const book = { ...args, id: uuid() }
       books.push(book)
       return book
     },
@@ -161,8 +161,10 @@ const resolvers = {
       if (!author) {
         return null
       }
-      const updatedAuthor = {... author, born: args.setBornTo}
-      authors.map(a => a.name === updatedAuthor.name ? updatedAuthor : a)
+
+      const updatedAuthor = { ...author, born: args.setBornTo }
+      authors[authors.findIndex(a => a.name === args.name)] = updatedAuthor
+
       return updatedAuthor
     }
   }
