@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { gql } from 'apollo-boost'
 import { useQuery } from 'react-apollo-hooks'
 
@@ -11,9 +11,9 @@ const USER = gql`
   }
 }`
 
-const ALL_BOOKS = gql`
-  {
-    allBooks {
+const RECOMMENDED_BOOKS = gql`
+  query findBooksByGenre($genre: String!) {
+    allBooks(genre: $genre) {
       title
       author
       {
@@ -29,26 +29,33 @@ const UserPage = (props) => {
   if (!props.show) {
     return null
   }
-
+  const [recommendations, setRecommendations] = useState(null)
   const user = useQuery(USER)
-  const books = useQuery(ALL_BOOKS)
 
-  if (user.loading || books.loading) {
+  if (user.loading) {
     return (
       <div>loading...</div>
     )
   }
+  const getRecommendations = async () => {
+    const recommendations = await props.client.query({
+      query: RECOMMENDED_BOOKS,
+      variables: { genre: user.data.me.favoriteGenre }
+    })
+    setRecommendations(recommendations.data.allBooks)
+  }
 
-  const recommendations = books.data.allBooks.filter(b => b.genres.indexOf(user.data.me.favoriteGenre) > -1)
   return (
     <div>
       <h2>Hello {user.data.me.username}</h2>
       <h3>Favourite genre: {user.data.me.favoriteGenre}</h3>
-      <p>Recommended reading:</p>
-      <table>
+      {recommendations ? null : <button onClick={getRecommendations}> Click for recommendations</button>}
+      {recommendations && <table>
         <tbody>
           <tr>
-            <th></th>
+            <th>
+              title
+            </th>
             <th>
               author
             </th>
@@ -64,7 +71,7 @@ const UserPage = (props) => {
             </tr>
           )}
         </tbody>
-      </table>
+      </table>}
     </div>
   )
 }

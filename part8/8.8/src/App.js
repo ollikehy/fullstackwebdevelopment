@@ -40,6 +40,7 @@ const App = (props) => {
 
       <UserPage
         show={page === 'userpage'}
+        client={props.client}
       />
     </div>
   )
