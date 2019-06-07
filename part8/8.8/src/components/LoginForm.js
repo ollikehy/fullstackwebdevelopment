@@ -17,7 +17,7 @@ const LoginForm = (props) => {
       props.setToken(token)
       localStorage.setItem('library-user-token', token)
     } catch(error){
-      props.handleError(error)
+      throw error
     }
   }
 
