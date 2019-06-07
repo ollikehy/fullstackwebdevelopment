@@ -1,5 +1,21 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, UserInputError, AuthenticationErrorm, gql } = require('apollo-server')
 const uuid = require('uuid/v1')
+const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
+const Author = require('./models/author')
+const Book = require('./models/book')
+
+mongoose.set('useFindAndModify', false)
+
+const MONGODB_URI = 'mongodb+srv://ollikehy:salasana@ollikehyfullstack-s24m4.gcp.mongodb.net/test?retryWrites=true&w=majority'
+
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
+  .then(() => {
+    console.log('connected to mongodb')
+  })
+  .catch((error) => {
+    console.log('mongodb error ' + error)
+  })
 
 const authors = [
   {
@@ -92,10 +108,14 @@ const typeDefs = gql`
     allAuthors: [Author!]!
   }
 
+  type Token {
+    value: String!
+  }
+
   type Book {
     title: String!
     published: Int!
-    author: String!
+    author: Author!
     id: ID!
     genres: [String!]!
   }
@@ -125,11 +145,16 @@ const resolvers = {
   Query: {
     bookCount: () => books.length,
     authorCount: () => authors.length,
-    allBooks: (root, args) => {
+    allAuthors: async (root, args) => {
+      const foundAuthors = await Author.find({})
+      return foundAuthors
+    },
+    allBooks: async (root, args) => {
       if (!args.author && !args.genre) {
-        return books
+        const foundBooks = await Book.find({}).populate('author')
+        return foundBooks
       }
-      let returnedBooks = books
+      let returnedBooks = await Book.find({}).populate('author')
       if (args.genre) {
         returnedBooks = returnedBooks.filter(b => (b.genres.indexOf(args.genre) > -1))
       }
@@ -138,24 +163,51 @@ const resolvers = {
       }
       return returnedBooks
     },
-    allAuthors: () => authors
+  },
+  Book: {
+    author: async (root) => {
+      if (!root.author) {
+        return {name: 'John Doe'}
+      }
+      const returnedAuthor = await Author.findOne({ name: root.author.name })
+      return returnedAuthor
+    }
   },
   Author: {
-    bookCount: (root) => {
-      return books.filter(b => b.author == root.name).length
+    bookCount: async (root) => {
+      const authorsBooks = await Book.find({ author: root.id })
+      return authorsBooks.length
     }
   },
   Mutation: {
-    addBook: (root, args) => {
-      if (!authors.find(a => a.name == args.author)) {
-        const author = { name: args.author, id: uuid() }
-        authors.push(author)
+    addBook: async (root, args, context) => {
+      let bookAuthor = await Author.findOne({ name: args.author })
+
+      if (!bookAuthor) {
+        bookAuthor = new Author({ name: args.author })
+        console.log('creating new author')
+        try {
+          await bookAuthor.save()
+          console.log('new author ' + bookAuthor.name + ' saved')
+        } catch (error) {
+          console.log('error while creating new user ' + error)
+        }
+      }
+      console.log('creating new book')
+      const book = new Book({ ...args, author: bookAuthor })
+
+      try {
+        await book.save()
+        console.log('book saved')
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
       }
 
-      const book = { ...args, id: uuid() }
-      books.push(book)
       return book
     },
+
     editAuthor: (root, args) => {
       const author = authors.find(a => a.name === args.name)
       if (!author) {
@@ -173,6 +225,16 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  /*  context: async ({ req }) => {
+      const authorization = req ? req.headers.authorization : null
+  
+      if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+        const decodedToken = jwt.verify(authorization.substring(7), JWT_KEY)
+        
+        const currentUser = await User
+        .findById(decodedToken.id)
+      }
+    }*/
 })
 
 server.listen().then(({ url }) => {

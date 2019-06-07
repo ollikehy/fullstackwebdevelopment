@@ -72,7 +72,7 @@ const Authors = (props) => {
           {authors.data.allAuthors.map(a =>
             <tr key={a.name}>
               <td>{a.name}</td>
-              <td>{a.born}</td>
+              {a.born ? <td>{a.born}</td> : <td>xxxx</td>}
               <td>{a.bookCount}</td>
             </tr>
           )}
