@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
+import LoginPage from './components/LoginPage'
 
-const App = () => {
+const App = (props) => {
   const [page, setPage] = useState('authors')
 
   return (
@@ -11,7 +12,10 @@ const App = () => {
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
-        <button onClick={() => setPage('add')}>add book</button>
+        {localStorage.getItem('library-user-token') ? 
+        <button onClick={() => setPage('add')}>add book</button>: null}
+        {page === 'login' ? null: <button onClick={() => setPage('login')}>
+          {localStorage.getItem('library-user-token') ? `logout` : `login`}</button>}
       </div>
 
       <Authors
@@ -25,7 +29,10 @@ const App = () => {
       <NewBook
         show={page === 'add'}
       />
-
+      <LoginPage
+        show={page === 'login'}
+        client={props.client}
+      />
     </div>
   )
 }

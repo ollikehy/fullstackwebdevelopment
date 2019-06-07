@@ -29,11 +29,10 @@ const Authors = (props) => {
     refetchQueries: [{ query: ALL_AUTHORS }]
   })
   const authors = useQuery(ALL_AUTHORS)
-
   if (!props.show) {
     return null
   }
-  
+
   if (authors.loading) {
     return <div>loading...</div>
   }
@@ -52,8 +51,10 @@ const Authors = (props) => {
   const options = authors.data.allAuthors.map((a) => ({
     value: a.name,
     label: a.name
-    })
+  })
   )
+
+  const loggedIn = localStorage.getItem('library-user-token') ? true : false
 
   return (
     <div>
@@ -78,18 +79,21 @@ const Authors = (props) => {
           )}
         </tbody>
       </table>
-      <h3>Set birthyear</h3>
-      <form onSubmit={changeBirthyear}>
-        <Select
-          value={name}
-          onChange={name => setName(name)}
-          options={options}
-          />
-        <div>birthyear:
+      {loggedIn &&
+        <div>
+          <h3>Set birthyear</h3>
+          <form onSubmit={changeBirthyear}>
+            <Select
+              value={name}
+              onChange={name => setName(name)}
+              options={options}
+            />
+            <div>birthyear:
           <input value={born} type='number' onChange={({ target }) => setBorn(target.value)} />
-        </div>
-        <button type='submit'>Change birthyear</button>
-      </form>
+            </div>
+            <button type='submit'>Change birthyear</button>
+          </form>
+        </div>}
     </div>
   )
 }
