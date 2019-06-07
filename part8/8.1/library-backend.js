@@ -143,8 +143,8 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
+    bookCount: () => Book.collection.countDocuments(),
+    authorCount: () => Author.collection.countDocuments(),
     allAuthors: async (root, args) => {
       const foundAuthors = await Author.find({})
       return foundAuthors
@@ -185,12 +185,13 @@ const resolvers = {
 
       if (!bookAuthor) {
         bookAuthor = new Author({ name: args.author })
-        console.log('creating new author')
         try {
           await bookAuthor.save()
           console.log('new author ' + bookAuthor.name + ' saved')
         } catch (error) {
-          console.log('error while creating new user ' + error)
+          throw new UserInputError(error, {
+            invalidArgs: args
+          })
         }
       }
       console.log('creating new book')
@@ -208,15 +209,21 @@ const resolvers = {
       return book
     },
 
-    editAuthor: (root, args) => {
-      const author = authors.find(a => a.name === args.name)
+    editAuthor: async (root, args) => {
+      const author = await Author.findOne({name: args.name})
       if (!author) {
         return null
       }
+      author.born = args.setBornTo
 
-      const updatedAuthor = { ...author, born: args.setBornTo }
-      authors[authors.findIndex(a => a.name === args.name)] = updatedAuthor
-
+      try {
+        await author.save()
+      } catch (error) {
+        throw new UserInputError(error, {
+          invalidArgs: args,
+        })
+      }
+      
       return updatedAuthor
     }
   }
