@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useQuery } from 'react-apollo-hooks';
 import { gql } from 'apollo-boost'
 
@@ -10,6 +10,7 @@ const ALL_BOOKS = gql`
       {
         name
       }
+      genres
       published
     }
   }
@@ -20,6 +21,8 @@ const Books = (props) => {
     return null
   }
 
+ const [genre, setGenre] = useState('')
+
   const books = useQuery(ALL_BOOKS)
 
   if (books.loading) {
@@ -27,6 +30,22 @@ const Books = (props) => {
       <div>loading...</div>
     )
   }
+
+  let renderedBooks = books.data.allBooks
+
+  if (genre) {
+    renderedBooks = renderedBooks.filter(b => b.genres.indexOf(genre) > -1)
+  }
+
+  const changeGenre = (e) => {
+    e.preventDefault()
+    setGenre(e.target.innerText)
+  }
+
+  const genres = []
+  books.data.allBooks.forEach(b =>
+    b.genres.forEach(g => genres.indexOf(g) > 0 ? null : genres.push(g))
+  )
 
   return (
     <div>
@@ -42,7 +61,7 @@ const Books = (props) => {
               published
             </th>
           </tr>
-          {books.data.allBooks.map(b =>
+          {renderedBooks.map(b =>
             <tr key={b.title}>
               <td>{b.title}</td>
               <td>{b.author.name}</td>
@@ -51,6 +70,10 @@ const Books = (props) => {
           )}
         </tbody>
       </table>
+      {genres &&
+        genres.map(g =>
+          <button key={g} onClick={changeGenre}>{g}</button>
+        )}
     </div>
   )
 }
