@@ -34,6 +34,10 @@ const ALL_BOOKS = gql`
     allBooks {
       title
       author
+      {
+        name
+      }
+      genres
       published
     }
   }
@@ -45,9 +49,21 @@ const NewBook = (props) => {
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
+
   const addBook = useMutation(CREATE_BOOK, {
-    refetchQueries : [{ query: ALL_BOOKS,
-    ALL_AUTHORS }]
+    refetchQueries: [{
+      ALL_BOOKS,
+      ALL_AUTHORS
+    }],
+    update: (store, response) => {
+      console.log(store)
+      const dataInStore = store.readQuery({ query: ALL_BOOKS })
+      dataInStore.allBooks.push(response.data.addBook)
+      store.writeQuery({
+        query: ALL_BOOKS,
+        data: dataInStore
+      })
+    },
   })
 
   if (!props.show) {

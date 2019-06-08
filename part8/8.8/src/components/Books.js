@@ -44,7 +44,7 @@ const Books = (props) => {
 
   const genres = []
   books.data.allBooks.forEach(b =>
-    b.genres.forEach(g => genres.indexOf(g) > 0 ? null : genres.push(g))
+    b.genres.forEach(g => genres.indexOf(g) > -1 ? null : genres.push(g))
   )
 
   return (
