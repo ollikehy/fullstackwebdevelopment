@@ -8,36 +8,38 @@ interface Result {
     average: number
 }
 
-const calculateHours = (hours: number[]) => {
-    let sum = 0
-    let offDays = 0
+const calculateHours = (targetValue: number, hours: number[]): Result => {
+    let sum = 0;
+    let offDays = 0;
     hours.forEach(hour => {
         if (hour > 0) {
-            sum += hour
+            sum += hour;
         } else {
-            offDays++
+            offDays++;
         }
-    })
+    });
 
-    const average = sum / (7 - offDays);
+    const average = sum / (hours.length - offDays);
     const results: Result = {
         periodLength: hours.length,
         trainingDays: hours.length - offDays,
-        success: average > 4 ? true : false,
-        rating: average < 2 ? 1 : average > 4 ? 3 : 2,
-        description: average < 2 ? 'Not great' : average > 5 ? 'Good job' : 'Not terrible',
-        target: 4,
+        success: average >= targetValue ? true : false,
+        rating: average < targetValue ? 1 : average > (targetValue + 1) ? 3 : 2,
+        description: average < targetValue ? 'Not great' : average > (targetValue + 1) ? 'Good job' : 'Not terrible',
+        target: targetValue,
         average: average
-    }
-    return results
+    };
+    return results;
 };
 
-if (process.argv.length > 2) {
-    let hours = []
-    for (var i = 2; i < process.argv.length; i++) {
-        hours.push(parseInt(process.argv[i]))
+/*if (process.argv.length > 3) {
+    const hours = [];
+    for (let i = 3; i < process.argv.length; i++) {
+        hours.push(parseInt(process.argv[i]));
     }
-    console.log(calculateHours(hours))
+    console.log(calculateHours(parseInt(process.argv[2]), hours));
 } else {
-    console.log(calculateHours([3, 0, 2, 4.5, 0, 3, 1]))
-}
+    console.log(calculateHours(2, [3, 0, 2, 4.5, 0, 3, 1]));
+}*/
+
+export default calculateHours;
