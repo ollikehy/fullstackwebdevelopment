@@ -78,6 +78,6 @@ const diagnoses: Diagnose[] = [
     "name": "Other proliferative retinopathy",
     "latin": "Alia retinopathia proliferativa"
   }
-]
+];
 
 export default diagnoses;

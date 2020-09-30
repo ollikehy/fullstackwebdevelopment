@@ -1,7 +1,6 @@
-import { Patient } from '../src/types';
-import validators from '../src/utils/validation';
-
-const rawPatients = [
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const patients = [
     {
         "id": "d2773336-f723-11e9-8f0b-362b9e155667",
         "name": "John McClane",
@@ -43,11 +42,4 @@ const rawPatients = [
         "occupation": "Digital evangelist"
     }
 ];
-
-const patients: Patient[] = rawPatients.map(pat => {
-    const patient = validators.toNewPatient(pat) as Patient;
-    patient.id = pat.id;
-    return patient;
-});
-
-export default patients;
+exports.default = patients;

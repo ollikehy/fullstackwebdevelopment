@@ -3,6 +3,6 @@ import { Diagnose } from '../types';
 
 const getDiagnoses = (): Array<Diagnose> => {
     return diagnoses;
-}
+};
 
-export default { getDiagnoses }
+export default { getDiagnoses };
