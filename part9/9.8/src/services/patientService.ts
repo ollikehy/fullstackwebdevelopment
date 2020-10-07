@@ -1,8 +1,17 @@
 import patients from "../../data/patients";
-import { Patient, CensoredPatient, NewPatient } from '../types';
+import { Patient, CensoredPatient, NewPatient, Entry } from '../types';
 
 const getPatients = (): Array<Patient> => {
     return patients;
+};
+
+const getPatient = (id: string): Patient => {
+    const patient = patients.find(patient => patient.id === id);
+    if (patient) {
+        return patient;
+    } else {
+        throw new Error('Patient not found');
+    }
 };
 
 const getCensoredPatients = (): CensoredPatient[] => {
@@ -11,7 +20,8 @@ const getCensoredPatients = (): CensoredPatient[] => {
         name,
         dateOfBirth,
         gender,
-        occupation
+        occupation,
+        entries: []
     }));
 };
 
@@ -25,11 +35,19 @@ const addPatient = (body: NewPatient): CensoredPatient => {
         gender: body.gender
     };
 
-    return { id: newPatient.id, name: newPatient.name, dateOfBirth: newPatient.dateOfBirth, occupation: newPatient.occupation, gender: newPatient.gender };
+    return { id: newPatient.id, name: newPatient.name, dateOfBirth: newPatient.dateOfBirth, occupation: newPatient.occupation, gender: newPatient.gender, entries: [] };
+};
+
+const addEntry = (id: string, body: Entry): Entry => {
+    const patient = patients.find(patient => patient.id === id);
+    patient?.entries.push(body);
+    return body;
 };
 
 export default {
     getPatients,
+    getPatient,
     getCensoredPatients,
-    addPatient
+    addPatient,
+    addEntry
 };

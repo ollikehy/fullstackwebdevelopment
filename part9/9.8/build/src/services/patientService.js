@@ -18,7 +18,7 @@ const getCensoredPatients = () => {
 };
 const addPatient = (body) => {
     const newPatient = {
-        id: patients_1.default.length + 1 + '',
+        id: (patients_1.default.length + 1).toString(),
         name: body.name,
         ssn: body.ssn,
         dateOfBirth: body.dateOfBirth,

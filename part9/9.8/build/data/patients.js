@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const patients = [
+const validation_1 = __importDefault(require("../src/utils/validation"));
+const rawPatients = [
     {
         "id": "d2773336-f723-11e9-8f0b-362b9e155667",
         "name": "John McClane",
@@ -42,4 +46,9 @@ const patients = [
         "occupation": "Digital evangelist"
     }
 ];
+const patients = rawPatients.map(pat => {
+    const patient = validation_1.default.toNewPatient(pat);
+    patient.id = pat.id;
+    return patient;
+});
 exports.default = patients;

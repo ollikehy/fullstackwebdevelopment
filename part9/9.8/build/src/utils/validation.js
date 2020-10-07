@@ -2,6 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const types_1 = require("../types");
 /*eslint-disable @typescript-eslint/no-explicit-any*/
+/*eslint-disable  @typescript-eslint/no-unsafe-member-access*/
+/*eslint-disable @typescript-eslint/restrict-template-expressions*/
+/*eslint-disable  @typescript-eslint/explicit-module-boundary-types*/
 const toNewPatient = (body) => {
     return {
         name: parseString(body.name, 'name'),
@@ -22,19 +25,19 @@ const isGender = (gender) => {
 };
 const parseString = (s, type) => {
     if (!s || !isString(s)) {
-        throw new Error(`Incorrect or missing ${type}: ` + s);
+        throw new Error(`Incorrect or missing ${type}: ${s}`);
     }
     return s;
 };
 const parseDate = (date) => {
     if (!date || !isString(date) || !isDate(date)) {
-        throw new Error('Incorrect or missing dateOfBirth: ' + date);
+        throw new Error(`Incorrect or missing dateOfBirth: ${date}`);
     }
     return date;
 };
 const parseGender = (gender) => {
     if (!gender || !isGender(gender)) {
-        throw new Error('Incorrect or missing gender: ' + gender);
+        throw new Error(`Incorrect or missing gender: ${gender}`);
     }
     return gender;
 };
