@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableWithoutFeedback, StyleSheet } from 'react-native';
+import { View, Text, TouchableWithoutFeedback, StyleSheet, ScrollView } from 'react-native';
+import { Link } from 'react-router-native';
 import Constants from 'expo-constants';
 import theme from '../theme';
 
@@ -9,6 +10,7 @@ const styles = StyleSheet.create({
         backgroundColor: theme.colors.background,
         opacity: 50,
         display: 'flex',
+        flexDirection: 'row',
         justifyContent: 'center'
     },
     text: {
@@ -22,9 +24,14 @@ const AppBar = () => {
 
     return (
         <View style={styles.container}>
-            <TouchableWithoutFeedback>
-                <Text style={styles.text}>Repositories</Text>
-            </TouchableWithoutFeedback>
+            <ScrollView horizontal>
+                <Link to="/" component={TouchableWithoutFeedback}>
+                    <Text style={styles.text}>Repositories</Text>
+                </Link>
+                <Link to="/signin" component={TouchableWithoutFeedback}>
+                    <Text style={styles.text}>Sign in</Text>
+                </Link>
+            </ScrollView>
         </View>);
 };
 

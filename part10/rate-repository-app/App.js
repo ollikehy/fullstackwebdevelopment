@@ -1,6 +1,15 @@
 import React from 'react';
 import Main from './src/components/Main';
+import {
+  NativeRouter
+} from 'react-router-native';
 
-export default App = () => {
-  return <Main />;
+const App = () => {
+  return (
+    <NativeRouter>
+      <Main />
+    </NativeRouter>
+  );
 }
+
+export default App;
