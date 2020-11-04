@@ -18,23 +18,23 @@ const ListItemBottom = ({ repository }) => {
     return (
         <View style={styles.container}>
             <View style={styles.stat}>
-                <Text style={{ fontWeight: 'bold' }}>
+                <Text testID="Stars" style={{ fontWeight: 'bold' }}>
                     {repository.stargazersCount > 999 ? (repository.stargazersCount / 1000).toFixed(1) + 'k' : repository.stargazersCount}
                 </Text>
                 <Text>Stars</Text>
             </View>
             <View style={styles.stat}>
-                <Text style={{ fontWeight: 'bold' }}>
+                <Text testID="Forks" style={{ fontWeight: 'bold' }}>
                     {repository.forksCount > 999 ? (repository.forksCount / 1000).toFixed(1) + 'k' : repository.forksCount}
                 </Text>
                 <Text>Forks</Text>
             </View>
             <View style={styles.stat}>
-                <Text style={{ fontWeight: 'bold' }}>{repository.reviewCount}</Text>
+                <Text testID="Reviews" style={{ fontWeight: 'bold' }}>{repository.reviewCount}</Text>
                 <Text>Reviews</Text>
             </View>
             <View style={styles.stat}>
-                <Text style={{ fontWeight: 'bold' }}>{repository.ratingAverage}</Text>
+                <Text testID="Rating" style={{ fontWeight: 'bold' }}>{repository.ratingAverage}</Text>
                 <Text>Rating</Text>
             </View>
         </View>

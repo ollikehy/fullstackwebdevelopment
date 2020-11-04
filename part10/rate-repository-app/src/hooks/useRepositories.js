@@ -1,20 +1,12 @@
-import {
-    useQuery
-} from '@apollo/react-hooks'
-import {
-    GET_REPOSITORIES
-} from '../graphql/queries'
+import { useQuery } from '@apollo/react-hooks'
+import { GET_REPOSITORIES } from '../graphql/queries'
 
 const useRepositories = () => {
-    const {
-        data
-    } = useQuery(GET_REPOSITORIES, {
+    const { data } = useQuery(GET_REPOSITORIES, {
         fetchPolicy: 'cache-and-network'
     })
 
-    return {
-        data
-    }
+    return { data }
 };
 
 export default useRepositories;

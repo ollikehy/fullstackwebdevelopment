@@ -39,7 +39,7 @@ const AppBar = () => {
                 <Link to="/" component={TouchableWithoutFeedback}>
                     <Text style={styles.text}>Repositories</Text>
                 </Link>
-                {!data.authorizedUser ?
+                {!(data && data.authorizedUser) ?
                     <Link to="/signin" component={TouchableWithoutFeedback}>
                         <Text style={styles.text}>Sign in</Text>
                     </Link> :

@@ -31,10 +31,10 @@ const ListItemTop = ({ repository }) => {
                 <Image style={styles.tinylogo} source={{ uri: repository.ownerAvatarUrl }} />
             </View>
             <View style={styles.column}>
-                <Text style={{ fontWeight: 'bold' }}>{repository.fullName}</Text>
-                <Text style={{ color: '#676767' }}>{repository.description}</Text>
+                <Text testID="Name" style={{ fontWeight: 'bold' }}>{repository.fullName}</Text>
+                <Text testID="Description" style={{ color: '#676767' }}>{repository.description}</Text>
                 <View style={{ display: 'flex', flexDirection: 'row' }}>
-                    <Text style={styles.language}>{repository.language}</Text>
+                    <Text testID="Language" style={styles.language}>{repository.language}</Text>
                     <Text style={{ flexGrow: 1 }} />
                 </View>
             </View>
