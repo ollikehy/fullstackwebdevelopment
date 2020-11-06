@@ -15,18 +15,24 @@ const styles = StyleSheet.create({
 
 const RepositoryItem = () => {
     let { repositoryid } = useParams();
+    const after = repository ? repository.reviews.pageInfo.endCursor : ''
+    const { repository, fetchMore } = useGetRepository({ repositoryid, first: 3, after });
 
-    const { data } = useGetRepository(repositoryid);
+    const onEndReach = () => {
+        fetchMore()
+    }
 
-    const reviews = (data && data.repository) ? data.repository.reviews.edges.map((edge) => edge.node) : []
+    const reviews = repository ? repository.reviews.edges.map((edge) => edge.node) : []
 
     return (
-        data && data.repository ?
+        repository ?
             <View style={styles.container}>
-                <RepositoryListItem repository={data.repository} />
-                <RepositoryLinkButton url={data.repository.url} />
+                <RepositoryListItem repository={repository} />
+                <RepositoryLinkButton url={repository.url} />
                 <FlatList
                     data={reviews}
+                    onEndReached={onEndReach}
+                    onEndReachedThreshold={0.5}
                     renderItem={({ item }) => <ReviewItem review={item} />}
                     keyExtractor={({ id }) => id + "" + Math.random()}
                 />

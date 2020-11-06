@@ -4,8 +4,8 @@ import {
 
 export const GET_REPOSITORIES = gql`
 
-query getRepositories($orderBy: AllRepositoriesOrderBy, $orderDirection: OrderDirection, $search: String) {
-        repositories(orderBy: $orderBy, orderDirection: $orderDirection, searchKeyword: $search) {
+query getRepositories($orderBy: AllRepositoriesOrderBy, $orderDirection: OrderDirection, $search: String, $first: Int, $after: String) {
+        repositories(orderBy: $orderBy, orderDirection: $orderDirection, searchKeyword: $search, first: $first, after: $after) {
           edges {
             node {
               id,
@@ -19,21 +19,40 @@ query getRepositories($orderBy: AllRepositoriesOrderBy, $orderDirection: OrderDi
               language,
               ownerAvatarUrl
             }
+          },
+          pageInfo {
+            startCursor,
+            endCursor,
+            hasNextPage
           }
         }
       }
 `
 
 export const GET_AUTHORIZED_USER = gql`
-query {
+query authorizedUser($includeReviews: Boolean = false) {
   authorizedUser {
     id,
-    username
+    username,
+    reviews @include(if: $includeReviews){
+      edges {
+        node {
+          id,
+          text,
+          rating,
+          createdAt,
+          user {
+            id,
+            username
+            }
+        }
+      }
+    }
   }
 }`
 
 export const GET_REPOSITORY = gql`
-query Repository($repositoryid: ID!){
+query Repository($repositoryid: ID!, $first: Int, $after: String){
   repository(id: $repositoryid) {
     id,
     ownerName,
@@ -46,7 +65,7 @@ query Repository($repositoryid: ID!){
     language,
     ownerAvatarUrl,
     url,
-    reviews {
+    reviews(first: $first, after: $after) {
       edges {
         node {
           id,
@@ -56,8 +75,13 @@ query Repository($repositoryid: ID!){
           user {
             id,
             username
-          }
+            }
         }
+      },
+      pageInfo {
+        hasNextPage,
+        startCursor,
+        endCursor,
       }
     }
   }

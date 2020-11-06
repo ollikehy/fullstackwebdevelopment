@@ -7,15 +7,21 @@ const RepositoryList = () => {
     const [orderBy, setOrderBy] = useState('')
     const [search, setSearch] = useState('')
     const [debouncedSearch] = useDebounce(search, 1000)
-    const { data } = useRepositories(orderBy, debouncedSearch)
+    const after = repositories ? repositories[repositories.length - 1].pageInfo.endCursor : ''
+    const { repositories, fetchMore } = useRepositories({ orderBy, debouncedSearch, first: 8, after })
+
+    const onEndReach = () => {
+        fetchMore()
+    }
 
     return (
-        data && data.repositories ?
+        repositories ?
             <RepositoryListContainer
-                repositories={data.repositories}
+                repositories={repositories}
                 setOrderBy={setOrderBy}
                 search={search}
                 setSearch={setSearch}
+                onEndReach={onEndReach}
             />
             : null);
 };

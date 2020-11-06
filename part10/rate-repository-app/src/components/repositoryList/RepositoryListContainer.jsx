@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const RepositoryListContainer = ({ repositories, setOrderBy, search, setSearch }) => {
+const RepositoryListContainer = ({ repositories, setOrderBy, search, setSearch, onEndReach }) => {
     let history = useHistory()
     const repositoryNodes = repositories ? repositories.edges.map(edge => edge.node) : [];
 
@@ -24,6 +24,8 @@ const RepositoryListContainer = ({ repositories, setOrderBy, search, setSearch }
         <FlatList
             data={repositoryNodes}
             keyExtractor={(item) => item.key + '' + Math.random()}
+            onEndReached={onEndReach}
+            onEndReachedThreshold={0.5}
             ItemSeparatorComponent={ItemSeparator}
             ListHeaderComponent={<RepositoryListHeader onChange={setOrderBy} search={search} setSearch={setSearch} />}
             renderItem={({ item }) => (

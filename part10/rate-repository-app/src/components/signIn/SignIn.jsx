@@ -4,7 +4,7 @@ import SignInContainer from './SignInContainer';
 import useSignIn from '../../hooks/useSignIn';
 
 const SignIn = () => {
-    const [signIn, data] = useSignIn();
+    const [signIn] = useSignIn();
     let history = useHistory()
 
     const onSubmit = async (values) => {

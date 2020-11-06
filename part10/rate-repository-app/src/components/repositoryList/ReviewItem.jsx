@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
 })
 
 const ReviewItem = ({ review }) => {
-
     const date = format(new Date(review.createdAt), 'dd.MM.yyyy')
 
     return (

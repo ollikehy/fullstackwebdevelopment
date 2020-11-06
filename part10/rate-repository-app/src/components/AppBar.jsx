@@ -39,9 +39,14 @@ const AppBar = () => {
                     <Text style={styles.text}>Repositories</Text>
                 </Link>
                 {data && data.authorizedUser &&
-                    <Link to='/review' component={TouchableWithoutFeedback}>
-                        <Text style={styles.text}>Create a review</Text>
-                    </Link>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Link to='/review' component={TouchableWithoutFeedback}>
+                            <Text style={styles.text}>Create a review</Text>
+                        </Link>
+                        <Link to='/reviews' component={TouchableWithoutFeedback}>
+                            <Text style={styles.text}>My reviews</Text>
+                        </Link>
+                    </View>
                 }
                 {!(data && data.authorizedUser) ?
                     <View style={{ flexDirection: 'row' }}>
