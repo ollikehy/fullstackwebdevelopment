@@ -3,8 +3,9 @@ import {
 } from 'apollo-boost';
 
 export const GET_REPOSITORIES = gql`
-query {
-        repositories {
+
+query getRepositories($orderBy: AllRepositoriesOrderBy, $orderDirection: OrderDirection, $search: String) {
+        repositories(orderBy: $orderBy, orderDirection: $orderDirection, searchKeyword: $search) {
           edges {
             node {
               id,
@@ -44,7 +45,21 @@ query Repository($repositoryid: ID!){
     ratingAverage,
     language,
     ownerAvatarUrl,
-    url
+    url,
+    reviews {
+      edges {
+        node {
+          id,
+          text,
+          rating,
+          createdAt,
+          user {
+            id,
+            username
+          }
+        }
+      }
+    }
   }
 }
 `

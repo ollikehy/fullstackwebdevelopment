@@ -1,4 +1,4 @@
-import ApolloClient from 'apollo-boost';
+import ApolloClient, { gql } from 'apollo-boost';
 import Consants from 'expo-constants'
 
 const createApolloClient = (authStorage) => {
@@ -16,6 +16,16 @@ const createApolloClient = (authStorage) => {
       }
     },
     uri: Consants.manifest.extra.apollo_uri + '/graphql',
+    typeDefs: gql`
+      enum AllRepositoriesOrderBy {
+        CREATED_AT
+        RATING_AVERAGE
+      },
+      enum OrderDirection {
+        ASC,
+        DESC
+      }
+    `
   });
 };
 

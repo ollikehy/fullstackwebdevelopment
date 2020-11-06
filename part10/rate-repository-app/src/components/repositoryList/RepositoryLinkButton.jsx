@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
 const RepositoryLinkButton = ({ url }) => {
 
     const handleOpenWithLinking = () => {
-        Linking.openURL(url)
+        // THIS IS DISABLED DUE TO THE EXTREME BUGGINESS OF THE EMULATOR
+        //Linking.openURL(url)
     }
 
     return (

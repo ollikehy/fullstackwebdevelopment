@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
-
     const [signOut] = useSignOut();
 
     const signUserOut = async () => {
@@ -39,10 +38,23 @@ const AppBar = () => {
                 <Link to="/" component={TouchableWithoutFeedback}>
                     <Text style={styles.text}>Repositories</Text>
                 </Link>
+                {data && data.authorizedUser &&
+                    <Link to='/review' component={TouchableWithoutFeedback}>
+                        <Text style={styles.text}>Create a review</Text>
+                    </Link>
+                }
                 {!(data && data.authorizedUser) ?
-                    <Link to="/signin" component={TouchableWithoutFeedback}>
-                        <Text style={styles.text}>Sign in</Text>
-                    </Link> :
+                    <View style={{ flexDirection: 'row' }}>
+                        <Link to="/signin" component={TouchableWithoutFeedback}>
+                            <Text style={styles.text}>Sign in</Text>
+                        </Link>
+                        <Link to="/signup" compononent={TouchableWithoutFeedback}>
+                            <Text style={styles.text}>
+                                Sign up
+                            </Text>
+                        </Link>
+                    </View>
+                    :
                     <Text style={styles.text} onPress={() => signUserOut()}>
                         Sign out
                     </Text>
